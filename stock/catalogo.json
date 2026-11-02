@@ -1,0 +1,632 @@
+[
+{
+"id": "lab-3",
+"linea": "XT-6 Expanse",
+"color": "Vanilla Ice / Maroon",
+"producto": "fotos/lab-03-vanilla-ice-maroon.jpg",
+"ambiente": "fotos/lab-03-vanilla-ice-maroon-lifestyle.jpg"
+},
+{
+"id": "lab-4",
+"linea": "XT-6 Expanse",
+"color": "Black / Ebony",
+"producto": "fotos/lab-04-black-ebony.jpg",
+"ambiente": "fotos/lab-04-black-ebony-lifestyle.jpg"
+},
+{
+"id": "lab-5",
+"linea": "XT-6 Expanse",
+"color": "White / Rainy Day",
+"producto": "fotos/lab-05-white-rainy-day.jpg",
+"ambiente": "fotos/lab-05-white-rainy-day-lifestyle.jpg"
+},
+{
+"id": "lab-6",
+"linea": "XT-6 Expanse",
+"color": "Earth Brown",
+"producto": "fotos/lab-06-earth-brown.jpg",
+"ambiente": "fotos/lab-06-earth-brown-lifestyle.jpg"
+},
+{
+"id": "lab-8",
+"linea": "XT-6 Protective",
+"color": "Shadow Gray / Iron",
+"producto": "fotos/lab-08-shadow-gray-iron.jpg",
+"ambiente": "fotos/lab-08-shadow-gray-iron-lifestyle.jpg"
+},
+{
+"id": "lab-9",
+"linea": "XT-6 Protective",
+"color": "Stormy Weather / Dark Navy",
+"producto": "fotos/lab-09-stormy-weather-dark-navy.jpg",
+"ambiente": "fotos/lab-09-stormy-weather-dark-navy-lifestyle.jpg"
+},
+{
+"id": "lab-10",
+"linea": "XT-6 Protective",
+"color": "Aloe / Black",
+"producto": "fotos/lab-10-aloe-black.jpg",
+"ambiente": "fotos/lab-10-aloe-black-lifestyle.jpg"
+},
+{
+"id": "lab-11",
+"linea": "XT-6 Protective",
+"color": "Castlerock / Black / Paloma",
+"producto": "fotos/lab-11-castlerock-black-paloma.jpg",
+"ambiente": "fotos/lab-11-castlerock-black-paloma-lifestyle.jpg"
+},
+{
+"id": "lab-13",
+"linea": "XT-6",
+"color": "Black / Black / Phantom",
+"producto": "fotos/lab-13-black-black-phantom.jpg",
+"ambiente": "fotos/lab-13-black-black-phantom-lifestyle.jpg"
+},
+{
+"id": "lab-14",
+"linea": "XT-6",
+"color": "White / White / Lunar Rock",
+"producto": "fotos/lab-14-white-white-lunar-rock.jpg",
+"ambiente": "fotos/lab-14-white-white-lunar-rock-lifestyle.jpg"
+},
+{
+"id": "lab-15",
+"linea": "XT-6",
+"color": "Lunar Rock / Ftw Silver / White",
+"producto": "fotos/lab-15-lunar-rock-ftw-silver-white.jpg",
+"ambiente": "fotos/lab-15-lunar-rock-ftw-silver-white-lifestyle.jpg"
+},
+{
+"id": "lab-16",
+"linea": "XT-6",
+"color": "Black Coffee / Burro / Bitter Chocolate",
+"producto": "fotos/lab-16-black-coffee-burro-bitter-chocolate.jpg",
+"ambiente": "fotos/lab-16-black-coffee-burro-bitter-chocolate-lifestyle.jpg"
+},
+{
+"id": "lab-17",
+"linea": "XT-6",
+"color": "Black Coffee / French Roast / Vanilla Ice",
+"producto": "fotos/lab-17-black-coffee-french-roast-vanilla-ice.jpg",
+"ambiente": "fotos/lab-17-black-coffee-french-roast-vanilla-ice-lifestyle.jpg"
+},
+{
+"id": "lab-18",
+"linea": "XT-6",
+"color": "Earth Brown",
+"producto": "fotos/lab-18-earth-brown.jpg",
+"ambiente": "fotos/lab-18-earth-brown-lifestyle.jpg"
+},
+{
+"id": "lab-19",
+"linea": "XT-6",
+"color": "Vanilla Ice / Almond Milk",
+"producto": "fotos/lab-19-vanilla-ice-almond-milk.jpg",
+"ambiente": "fotos/lab-19-vanilla-ice-almond-milk-lifestyle.jpg"
+},
+{
+"id": "lab-20",
+"linea": "XT-6",
+"color": "Lilac Ash / Black Silver",
+"producto": "fotos/lab-20-lilac-ash-black-silver.jpg",
+"ambiente": "fotos/lab-20-lilac-ash-black-silver-lifestyle.jpg"
+},
+{
+"id": "lab-21",
+"linea": "XT-6",
+"color": "Vanilla Ice / Black / Silver Cloud",
+"producto": "fotos/lab-21-vanilla-ice-black-silver-cloud.jpg",
+"ambiente": "fotos/lab-21-vanilla-ice-black-silver-cloud-lifestyle.jpg"
+},
+{
+"id": "lab-22",
+"linea": "XT-6",
+"color": "Vanilla Ice / Ftw Silver / Lilac Ash",
+"producto": "fotos/lab-22-vanilla-ice-ftw-silver-lilac-ash.jpg",
+"ambiente": "fotos/lab-22-vanilla-ice-ftw-silver-lilac-ash-lifestyle.jpg"
+},
+{
+"id": "lab-23",
+"linea": "XT-6",
+"color": "Vanilla Ice / Oxford Tan / Heron",
+"producto": "fotos/lab-23-vanilla-ice-oxford-tan-heron.jpg",
+"ambiente": "fotos/lab-23-vanilla-ice-oxford-tan-heron-lifestyle.jpg"
+},
+{
+"id": "lab-24",
+"linea": "XT-6",
+"color": "Black / Grey jD",
+"producto": "fotos/lab-24-black-grey-jd.jpg",
+"ambiente": "fotos/lab-24-black-grey-jd-lifestyle.jpg"
+},
+{
+"id": "lab-25",
+"linea": "XT-6",
+"color": "Beige / Black",
+"producto": "fotos/lab-25-beige-black.jpg",
+"ambiente": "fotos/lab-25-beige-black-lifestyle.jpg"
+},
+{
+"id": "lab-26",
+"linea": "XT-6",
+"color": "Mahogany Rose / Earth Brown",
+"producto": "fotos/lab-26-mahogany-rose-earth-brown.jpg",
+"ambiente": "fotos/lab-26-mahogany-rose-earth-brown-lifestyle.jpg"
+},
+{
+"id": "lab-27",
+"linea": "XT-6",
+"color": "White / Excalibur / Paloma",
+"producto": "fotos/lab-27-white-excalibur-paloma.jpg",
+"ambiente": "fotos/lab-27-white-excalibur-paloma-lifestyle.jpg"
+},
+{
+"id": "lab-28",
+"linea": "XT-6",
+"color": "Tapioca / Spellbound / Lichen",
+"producto": "fotos/lab-28-tapioca-spellbound-lichen.jpg",
+"ambiente": "fotos/lab-28-tapioca-spellbound-lichen-lifestyle.jpg"
+},
+{
+"id": "lab-29",
+"linea": "XT-6",
+"color": "Castlerock / Ftw Silver / Vanilla Ice",
+"producto": "fotos/lab-29-castlerock-ftw-silver-vanilla-ice.jpg",
+"ambiente": "fotos/lab-29-castlerock-ftw-silver-vanilla-ice-lifestyle.jpg"
+},
+{
+"id": "lab-30",
+"linea": "XT-6",
+"color": "Pearl Blue / Grisaille / Vanilla Ice",
+"producto": "fotos/lab-30-pearl-blue-grisaille-vanilla-ice.jpg",
+"ambiente": "fotos/lab-30-pearl-blue-grisaille-vanilla-ice-lifestyle.jpg"
+},
+{
+"id": "lab-31",
+"linea": "XT-6",
+"color": "Ghost Gray / Ghost Gray / Gray Flannel",
+"producto": "fotos/lab-31-ghost-gray-ghost-gray-gray-flannel.jpg",
+"ambiente": "fotos/lab-31-ghost-gray-ghost-gray-gray-flannel-lifestyle.jpg"
+},
+{
+"id": "lab-32",
+"linea": "XT-6",
+"color": "Lunar Rock / Deep Lichen Green",
+"producto": "fotos/lab-32-lunar-rock-deep-lichen-green.jpg",
+"ambiente": "fotos/lab-32-lunar-rock-deep-lichen-green-lifestyle.jpg"
+},
+{
+"id": "lab-33",
+"linea": "XT-6",
+"color": "Silver Sage / Cloudburst",
+"producto": "fotos/lab-33-silver-sage-cloudburst.jpg",
+"ambiente": "fotos/lab-33-silver-sage-cloudburst-lifestyle.jpg"
+},
+{
+"id": "lab-34",
+"linea": "XT-6",
+"color": "Alloy / Black / Lava Falls",
+"producto": "fotos/lab-34-alloy-black-lava-falls.jpg",
+"ambiente": "fotos/lab-34-alloy-black-lava-falls-lifestyle.jpg"
+},
+{
+"id": "lab-35",
+"linea": "XT-6",
+"color": "Sea Foam / Urban Chic",
+"producto": "fotos/lab-35-sea-foam-urban-chic.jpg",
+"ambiente": "fotos/lab-35-sea-foam-urban-chic-lifestyle.jpg"
+},
+{
+"id": "lab-36",
+"linea": "XT-6",
+"color": "Rainy Day / Paloma / Ftw Silver",
+"producto": "fotos/lab-36-rainy-day-paloma-ftw-silver.jpg",
+"ambiente": "fotos/lab-36-rainy-day-paloma-ftw-silver-lifestyle.jpg"
+},
+{
+"id": "lab-37",
+"linea": "XT-6",
+"color": "Rainy Day Black",
+"producto": "fotos/lab-37-rainy-day-black.jpg",
+"ambiente": "fotos/lab-37-rainy-day-black-lifestyle.jpg"
+},
+{
+"id": "lab-38",
+"linea": "XT-6",
+"color": "Maritime Blue / Huckleberry",
+"producto": "fotos/lab-38-maritime-blue-huckleberry.jpg",
+"ambiente": "fotos/lab-38-maritime-blue-huckleberry-lifestyle.jpg"
+},
+{
+"id": "lab-39",
+"linea": "XT-6",
+"color": "Stormy Weather / Mustang",
+"producto": "fotos/lab-39-stormy-weather-mustang.jpg",
+"ambiente": "fotos/lab-39-stormy-weather-mustang-lifestyle.jpg"
+},
+{
+"id": "lab-40",
+"linea": "XT-6",
+"color": "Spellbound / Maritime Blue",
+"producto": "fotos/lab-40-spellbound-maritime-blue.jpg",
+"ambiente": "fotos/lab-40-spellbound-maritime-blue-lifestyle.jpg"
+},
+{
+"id": "lab-41",
+"linea": "XT-6",
+"color": "Orchid Sky",
+"producto": "fotos/lab-41-orchid-sky.jpg",
+"ambiente": "fotos/lab-41-orchid-sky-lifestyle.jpg"
+},
+{
+"id": "lab-42",
+"linea": "XT-6",
+"color": "Coyote Brown / Safari / Sahara Sun",
+"producto": "fotos/lab-42-coyote-brown-safari-sahara-sun.jpg",
+"ambiente": "fotos/lab-42-coyote-brown-safari-sahara-sun-lifestyle.jpg"
+},
+{
+"id": "lab-43",
+"linea": "XT-6",
+"color": "Peat / Icicle / Lime Cream",
+"producto": "fotos/lab-43-peat-icicle-lime-cream.jpg",
+"ambiente": "fotos/lab-43-peat-icicle-lime-cream-lifestyle.jpg"
+},
+{
+"id": "lab-44",
+"linea": "XT-6",
+"color": "Maritime Blue / Black",
+"producto": "fotos/lab-44-maritime-blue-black.jpg"
+},
+{
+"id": "lab-45",
+"linea": "XT-6",
+"color": "Asphalt / Black / Red Orange",
+"producto": "fotos/lab-45-asphalt-black-red-orange.jpg"
+},
+{
+"id": "lab-46",
+"linea": "XT-6",
+"color": "Walnut / Huckleberry",
+"producto": "fotos/lab-46-walnut-huckleberry.jpg",
+"ambiente": "fotos/lab-46-walnut-huckleberry-lifestyle.jpg"
+},
+{
+"id": "lab-47",
+"linea": "XT-6",
+"color": "Nostalgia",
+"producto": "fotos/lab-47-nostalgia.jpg",
+"ambiente": "fotos/lab-47-nostalgia-lifestyle.jpg"
+},
+{
+"id": "lab-48",
+"linea": "XT-6",
+"color": "Earth Brown / Mykonos Blue",
+"producto": "fotos/lab-48-earth-brown-mykonos-blue.jpg"
+},
+{
+"id": "lab-49",
+"linea": "XT-6",
+"color": "Cloudburst / Icy Pink / Tapioca",
+"producto": "fotos/lab-49-cloudburst-icy-pink-tapioca.jpg"
+},
+{
+"id": "lab-50",
+"linea": "XT-6",
+"color": "Ice Flow / Orchid Bouquet",
+"producto": "fotos/lab-50-ice-flow-orchid-bouquet.jpg"
+},
+{
+"id": "lab-51",
+"linea": "XT-6",
+"color": "Lunar Rock / Dawn Pink / Vanilla Ice",
+"producto": "fotos/lab-51-lunar-rock-dawn-pink-vanilla-ice.jpg"
+},
+{
+"id": "lab-52",
+"linea": "XT-6",
+"color": "Dragon Fire",
+"producto": "fotos/lab-52-dragon-fire.jpg",
+"ambiente": "fotos/lab-52-dragon-fire-lifestyle.jpg"
+},
+{
+"id": "lab-53",
+"linea": "XT-6",
+"color": "Tapioca / Vanilla Ice / Pumkin Ice",
+"producto": "fotos/lab-53-tapioca-vanilla-ice-pumkin-ice.jpg"
+},
+{
+"id": "lab-54",
+"linea": "XT-6",
+"color": "Icicle / Nirvana / Nine Iron",
+"producto": "fotos/lab-54-icicle-nirvana-nine-iron.jpg",
+"ambiente": "fotos/lab-54-icicle-nirvana-nine-iron-lifestyle.jpg"
+},
+{
+"id": "lab-55",
+"linea": "XT-6",
+"color": "Black / Black / Ftw Silver",
+"producto": "fotos/lab-55-black-black-ftw-silver.jpg",
+"ambiente": "fotos/lab-55-black-black-ftw-silver-lifestyle.jpg"
+},
+{
+"id": "lab-56",
+"linea": "XT-6",
+"color": "Pewter / Black / Turmeric",
+"producto": "fotos/lab-56-pewter-black-turmeric.jpg",
+"ambiente": "fotos/lab-56-pewter-black-turmeric-lifestyle.jpg"
+},
+{
+"id": "lab-57",
+"linea": "XT-6",
+"color": "Bistro Green, Green Milieu & Black",
+"producto": "fotos/lab-57-bistro-green-green-milieu-black.jpg",
+"ambiente": "fotos/lab-57-bistro-green-green-milieu-black-lifestyle.jpg"
+},
+{
+"id": "lab-58",
+"linea": "XT-6",
+"color": "White / Blue Curacao",
+"producto": "fotos/lab-58-white-blue-curacao.jpg",
+"ambiente": "fotos/lab-58-white-blue-curacao-lifestyle.jpg"
+},
+{
+"id": "lab-60",
+"linea": "XT-6 Stormshade",
+"color": "Black / Dark Gull Gray",
+"producto": "fotos/lab-60-black-dark-gull-gray.jpg",
+"ambiente": "fotos/lab-60-black-dark-gull-gray-lifestyle.jpg"
+},
+{
+"id": "lab-61",
+"linea": "XT-6 Stormshade",
+"color": "Silver Cloud / Cloudburst",
+"producto": "fotos/lab-61-silver-cloud-cloudburst.jpg",
+"ambiente": "fotos/lab-61-silver-cloud-cloudburst-lifestyle.jpg"
+},
+{
+"id": "lab-62",
+"linea": "XT-6 Stormshade",
+"color": "Plum Perfect / Dawn Pink",
+"producto": "fotos/lab-62-plum-perfect-dawn-pink.jpg",
+"ambiente": "fotos/lab-62-plum-perfect-dawn-pink-lifestyle.jpg"
+},
+{
+"id": "lab-64",
+"linea": "XT-6 Steel Streets",
+"color": "Cloudburst / Dawn Pink",
+"producto": "fotos/lab-64-cloudburst-dawn-pink.jpg",
+"ambiente": "fotos/lab-64-cloudburst-dawn-pink-lifestyle.jpg"
+},
+{
+"id": "lab-65",
+"linea": "XT-6 Steel Streets",
+"color": "Urban Chic / Wrought Iron",
+"producto": "fotos/lab-65-urban-chic-wrought-iron.jpg",
+"ambiente": "fotos/lab-65-urban-chic-wrought-iron-lifestyle.jpg"
+},
+{
+"id": "lab-66",
+"linea": "XT-6 Steel Streets",
+"color": "Spellbound / Tradewinds",
+"producto": "fotos/lab-66-spellbound-tradewinds.jpg",
+"ambiente": "fotos/lab-66-spellbound-tradewinds-lifestyle.jpg"
+},
+{
+"id": "lab-67",
+"linea": "XT-6 Steel Streets",
+"color": "Coyote Brown / Oxford Tan",
+"producto": "fotos/lab-67-coyote-brown-oxford-tan.jpg",
+"ambiente": "fotos/lab-67-coyote-brown-oxford-tan-lifestyle.jpg"
+},
+{
+"id": "lab-69",
+"linea": "Colaboración",
+"color": "XT-Pathway 2 “FERXXO”",
+"producto": "fotos/lab-69-xt-pathway-2-ferxxo.jpg",
+"ambiente": "fotos/lab-69-xt-pathway-2-ferxxo-lifestyle.jpg"
+},
+{
+"id": "lab-70",
+"linea": "Colaboración",
+"color": "XT-4 OG \"Feid - Ferxxocalipsis\"",
+"producto": "fotos/lab-70-xt-4-og-feid-ferxxocalipsis.jpg",
+"ambiente": "fotos/lab-70-xt-4-og-feid-ferxxocalipsis-lifestyle.jpg"
+},
+{
+"id": "lab-71",
+"linea": "Colaboración",
+"color": "DOMINGO YEBK U",
+"producto": "fotos/lab-71-domingo-yebk-u.jpg",
+"ambiente": "fotos/lab-71-domingo-yebk-u-lifestyle.jpg"
+},
+{
+"id": "lab-72",
+"linea": "Colaboración",
+"color": "ACS NEXXT THE GREEN STAR",
+"producto": "fotos/lab-72-acs-nexxt-the-green-star.jpg",
+"ambiente": "fotos/lab-72-acs-nexxt-the-green-star-lifestyle.jpg"
+},
+{
+"id": "lab-73",
+"linea": "Colaboración",
+"color": "Celestial Aura",
+"producto": "fotos/lab-73-celestial-aura.jpg",
+"ambiente": "fotos/lab-73-celestial-aura-lifestyle.jpg"
+},
+{
+"id": "gtx-2",
+"linea": "XT-6 GORE-TEX",
+"color": "Black / Black / Ftw Silver",
+"producto": "fotos/gtx-02-black-black-ftw-silver.jpg",
+"ambiente": "fotos/gtx-02-black-black-ftw-silver-lifestyle.jpg"
+},
+{
+"id": "gtx-3",
+"linea": "XT-6 GORE-TEX",
+"color": "White / White / Ftw Silver",
+"producto": "fotos/gtx-03-white-white-ftw-silver.jpg",
+"ambiente": "fotos/gtx-03-white-white-ftw-silver-lifestyle.jpg"
+},
+{
+"id": "gtx-4",
+"linea": "XT-6 GORE-TEX",
+"color": "Silver Cloud / Urban Chic / Shadow Green",
+"producto": "fotos/gtx-04-silver-cloud-urban-chic-shadow-green.jpg",
+"ambiente": "fotos/gtx-04-silver-cloud-urban-chic-shadow-green-lifestyle.jpg"
+},
+{
+"id": "gtx-5",
+"linea": "XT-6 GORE-TEX",
+"color": "White Pepper / Silver Sage",
+"producto": "fotos/gtx-05-white-pepper-silver-sage.jpg",
+"ambiente": "fotos/gtx-05-white-pepper-silver-sage-lifestyle.jpg"
+},
+{
+"id": "gtx-6",
+"linea": "XT-6 GORE-TEX",
+"color": "Safari / Safari / Black",
+"producto": "fotos/gtx-06-safari-safari-black.jpg",
+"ambiente": "fotos/gtx-06-safari-safari-black-lifestyle.jpg"
+},
+{
+"id": "gtx-7",
+"linea": "XT-6 GORE-TEX",
+"color": "Black / Icy Pink / Dawn Pink",
+"producto": "fotos/gtx-07-black-icy-pink-dawn-pink.jpg",
+"ambiente": "fotos/gtx-07-black-icy-pink-dawn-pink-lifestyle.jpg"
+},
+{
+"id": "gtx-8",
+"linea": "XT-6 GORE-TEX",
+"color": "Sea Foam / Green Milieu / Black",
+"producto": "fotos/gtx-08-sea-foam-green-milieu-black.jpg",
+"ambiente": "fotos/gtx-08-sea-foam-green-milieu-black-lifestyle.jpg"
+},
+{
+"id": "gtx-9",
+"linea": "XT-6 GORE-TEX",
+"color": "Black / Black / Asphalt",
+"producto": "fotos/gtx-09-black-black-asphalt.jpg",
+"ambiente": "fotos/gtx-09-black-black-asphalt-lifestyle.jpg"
+},
+{
+"id": "gtx-10",
+"linea": "XT-6 GORE-TEX",
+"color": "Vanilla Ice / Bog / Shadow Green",
+"producto": "fotos/gtx-10-vanilla-ice-bog-shadow-green.jpg",
+"ambiente": "fotos/gtx-10-vanilla-ice-bog-shadow-green-lifestyle.jpg"
+},
+{
+"id": "gtx-11",
+"linea": "XT-6 GORE-TEX",
+"color": "Gray Violet / Cosmic Sky / White",
+"producto": "fotos/gtx-11-gray-violet-cosmic-sky-white.jpg",
+"ambiente": "fotos/gtx-11-gray-violet-cosmic-sky-white-lifestyle.jpg"
+},
+{
+"id": "gtx-12",
+"linea": "XT-6 GORE-TEX",
+"color": "Tea / Peat",
+"producto": "fotos/gtx-12-tea-peat.jpg",
+"ambiente": "fotos/gtx-12-tea-peat-lifestyle.jpg"
+},
+{
+"id": "gtx-13",
+"linea": "XT-6 GORE-TEX",
+"color": "Black / Cloudburst / Dark Gull Gray",
+"producto": "fotos/gtx-13-black-cloudburst-dark-gull-gray.jpg",
+"ambiente": "fotos/gtx-13-black-cloudburst-dark-gull-gray-lifestyle.jpg"
+},
+{
+"id": "gtx-14",
+"linea": "XT-6 GORE-TEX",
+"color": "Bitter Chocolate / Iron / Vanilla Ice",
+"producto": "fotos/gtx-14-bitter-chocolate-iron-vanilla-ice.jpg",
+"ambiente": "fotos/gtx-14-bitter-chocolate-iron-vanilla-ice-lifestyle.jpg"
+},
+{
+"id": "gtx-15",
+"linea": "XT-6 GORE-TEX",
+"color": "Tradewinds / Stormy Weather / Bog",
+"producto": "fotos/gtx-15-tradewinds-stormy-weather-bog.jpg",
+"ambiente": "fotos/gtx-15-tradewinds-stormy-weather-bog-lifestyle.jpg"
+},
+{
+"id": "gtx-16",
+"linea": "XT-6 GORE-TEX",
+"color": "Mahogany Rose / Tawny Port / Black",
+"producto": "fotos/gtx-16-mahogany-rose-tawny-port-black.jpg",
+"ambiente": "fotos/gtx-16-mahogany-rose-tawny-port-black-lifestyle.jpg"
+},
+{
+"id": "gtx-17",
+"linea": "XT-6 GORE-TEX",
+"color": "White Pepper / Shadow / Huckleberry",
+"producto": "fotos/gtx-17-white-pepper-shadow-huckleberry.jpg",
+"ambiente": "fotos/gtx-17-white-pepper-shadow-huckleberry-lifestyle.jpg"
+},
+{
+"id": "gtx-18",
+"linea": "XT-6 GORE-TEX",
+"color": "Blue Nights / Astral Aura / Plum Kitten",
+"producto": "fotos/gtx-18-blue-nights-astral-aura-plum-kitten.jpg",
+"ambiente": "fotos/gtx-18-blue-nights-astral-aura-plum-kitten-lifestyle.jpg"
+},
+{
+"id": "gtx-19",
+"linea": "XT-6 GORE-TEX",
+"color": "Wrought Iron / Urban Chic / Sedona Sage",
+"producto": "fotos/gtx-19-wrought-iron-urban-chic-sedona-sage.jpg",
+"ambiente": "fotos/gtx-19-wrought-iron-urban-chic-sedona-sage-lifestyle.jpg"
+},
+{
+"id": "gtx-20",
+"linea": "XT-6 GORE-TEX",
+"color": "Eucalyptus / Silver Sage",
+"producto": "fotos/gtx-20-eucalyptus-silver-sage.jpg",
+"ambiente": "fotos/gtx-20-eucalyptus-silver-sage-lifestyle.jpg"
+},
+{
+"id": "gtx-21",
+"linea": "XT-6 GORE-TEX",
+"color": "Niagara / Sunny Lime / Black",
+"producto": "fotos/gtx-21-niagara-sunny-lime-black.jpg",
+"ambiente": "fotos/gtx-21-niagara-sunny-lime-black-lifestyle.jpg"
+},
+{
+"id": "gtx-22",
+"linea": "XT-6 GORE-TEX",
+"color": "Paloma / Maroob / Buttrf",
+"producto": "fotos/gtx-22-paloma-maroob-buttrf.jpg",
+"ambiente": "fotos/gtx-22-paloma-maroob-buttrf-lifestyle.jpg"
+},
+{
+"id": "gtx-23",
+"linea": "XT-6 GORE-TEX",
+"color": "White / Green Milieu / Ice Fl",
+"producto": "fotos/gtx-23-white-green-milieu-ice-fl.jpg",
+"ambiente": "fotos/gtx-23-white-green-milieu-ice-fl-lifestyle.jpg"
+},
+{
+"id": "gtx-24",
+"linea": "XT-6 GORE-TEX",
+"color": "Aspargus Green / Tea / Bchoco",
+"producto": "fotos/gtx-24-aspargus-green-tea-bchoco.jpg",
+"ambiente": "fotos/gtx-24-aspargus-green-tea-bchoco-lifestyle.jpg"
+},
+{
+"id": "gtx-25",
+"linea": "XT-6 GORE-TEX",
+"color": "Concog / Stormw / Ftw Silver",
+"producto": "fotos/gtx-25-concog-stormw-ftw-silver.jpg",
+"ambiente": "fotos/gtx-25-concog-stormw-ftw-silver-lifestyle.jpg"
+},
+{
+"id": "gtx-26",
+"linea": "XT-6 GORE-TEX",
+"color": "Mustang / Bitter Chocolate",
+"producto": "fotos/gtx-26-mustang-bitter-chocolate.jpg",
+"ambiente": "fotos/gtx-26-mustang-bitter-chocolate-lifestyle.jpg"
+}
+]
