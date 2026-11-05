@@ -144,8 +144,20 @@
   .jpnote{background:#fff;border-radius:16px;box-shadow:var(--shadow);padding:13px 15px;margin:14px 0 0;font-size:13px;color:var(--muted)}
   .jpnote b{color:var(--choco);font-weight:600}
 </style>
+<style>
+.bnav{position:sticky;top:0;z-index:9;background:#4A3428;color:#fff;font-family:Poppins,system-ui,sans-serif;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 14px}
+.bnav a{color:#fff;text-decoration:none}
+.bnav .home{display:flex;align-items:center;gap:7px;font-weight:600;font-size:13.5px}
+.bnav .home img{width:22px;height:22px}
+.bnav nav{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+.bnav nav::-webkit-scrollbar{display:none}
+.bnav nav a{font-size:12.5px;font-weight:500;padding:6px 10px;border-radius:999px;white-space:nowrap;opacity:.85}
+.bnav nav a.on{background:rgba(255,255,255,.16);opacity:1}
+</style>
 </head>
 <body>
+<div class="bnav"><a class="home" href="../"><img src="../assets/cisne_blanco.png" alt="">Inicio</a><nav><a href="../stock/" class="on">Mi talla</a><a href="../catalogo/">Catálogo</a><a href="../terminos/">Términos</a></nav></div>
+
 <header class="hero">
   <img class="swan-bg" src="../assets/cisne_blanco.png" alt="">
   <img class="logo" src="../assets/logo_blanco.png" alt="bruna">
