@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Bruna.cr · Disponible</title>
+<link rel="icon" href="../assets/cisne.png">
+<meta name="description" content="Mirá lo disponible en tu talla en Bruna.cr: sneakers originales en Costa Rica.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -50,6 +52,11 @@
   .pill{font-size:11.5px;font-weight:600;border-radius:999px;padding:3px 10px}
   .pill.ready{background:var(--ready-bg);color:var(--ready)}
   .pill.way{background:var(--way-bg);color:var(--way)}
+  .pill.promo{background:#fde3df;color:var(--coral-d)}
+  .seg button.ptab{color:var(--coral-d);font-weight:600}
+  .seg button.ptab.on{color:#fff}
+  .pinfo{display:none;margin:14px 2px 0;font-size:13px;color:var(--muted)}
+  .pinfo b{color:var(--choco);font-weight:600}
   .sub{margin:2px 4px 14px;font-size:13px;color:var(--muted)}
 
   .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
@@ -117,6 +124,25 @@
   .toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,30px);background:var(--choco);color:#fff;padding:10px 16px;border-radius:12px;font-size:13.5px;opacity:0;transition:.25s;z-index:20;pointer-events:none}
   .toast.on{opacity:1;transform:translate(-50%,0)}
   .msg{padding:40px 10px;text-align:center;color:var(--muted)}
+  .old{text-decoration:line-through;color:var(--muted);font-weight:400;font-size:.85em;margin-right:4px}
+  .new{color:var(--coral);font-weight:600}
+  .off{position:absolute;right:9px;top:9px;background:var(--coral);color:#fff;font-size:11px;font-weight:700;border-radius:999px;padding:3px 8px}
+  .uni{margin:8px 2px 0;font-size:11.5px;color:var(--muted)}
+  .uni b{color:var(--choco);font-weight:600}
+  .guia-btn{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;margin-top:12px;border:1.5px solid var(--line);background:var(--off);border-radius:14px;padding:11px 14px;text-align:left}
+  .guia-btn b{display:block;font-size:14px;font-weight:600;color:var(--choco)}
+  .guia-btn span{font-size:12px;color:var(--muted)}
+  .guia-btn i{font-style:normal;font-size:20px;color:var(--coral)}
+  .guia{padding:30px 16px 8px}
+  .guia h3{margin:0;font-size:22px;font-weight:700}
+  .guia .lead{font-size:13px;color:var(--muted);margin:4px 0 14px}
+  .gt{width:100%;border-collapse:separate;border-spacing:0;background:#fff;border-radius:16px;overflow:hidden;box-shadow:var(--shadow);font-size:13.5px;text-align:center;font-variant-numeric:tabular-nums}
+  .gt th{background:var(--choco);color:#fff;font-weight:600;font-size:11.5px;padding:9px 4px;letter-spacing:.03em;position:sticky;top:0}
+  .gt td{padding:8px 4px;border-top:1px solid var(--line)}
+  .gt td.us{font-weight:600;color:var(--choco)}
+  .gt tr.hit td{background:#fde3df}
+  .jpnote{background:#fff;border-radius:16px;box-shadow:var(--shadow);padding:13px 15px;margin:14px 0 0;font-size:13px;color:var(--muted)}
+  .jpnote b{color:var(--choco);font-weight:600}
 </style>
 </head>
 <body>
@@ -133,7 +159,10 @@
     <div class="seg" id="seg"></div>
     <div class="lbl" id="sizelbl">Tu talla (US)</div>
     <div class="sizes" id="sizes"></div>
-    <div class="legend"><span><i style="background:var(--ready)"></i>Listo para entregar</span><span><i style="background:var(--way)"></i>Viene en camino</span></div>
+    <div class="pinfo" id="pinfo"><b>Todo lo que está rebajado</b>, en todas las tallas. Tocá un par para ver tallas y escribirnos.</div>
+    <div class="legend" id="legend"><span><i style="background:var(--ready)"></i>Listo para entregar</span><span><i style="background:var(--way)"></i>Viene en camino</span></div>
+    <div class="uni" id="uni"><b>Salomon es unisex:</b> tu talla de hombre + 1 = tu talla de mujer (8.5 hombre = 9.5 mujer).</div>
+    <button class="guia-btn" id="guiaBtn"><div><b>¿Dudas con tu talla?</b><span>Mirá la guía de tallas de Salomon: UK, EU, US y JP.</span></div><i>›</i></button>
   </section>
 
   <div id="out"><div class="msg">Cargando lo disponible…</div></div>
@@ -141,14 +170,13 @@
   <section class="info">
     <div><b>Originales, siempre</b>Todo lo que ves está verificado. Aquí comprás tranquilo.</div>
     <div><b>Envío a todo el país</b>₡3.500 en la GAM y ₡4.000 fuera de la GAM. Llega en 1 a 2 días hábiles.</div>
-    <div><b>Reservá o apartá</b>Lo que viene en camino lo podés asegurar desde ya. Escribinos y te explicamos.</div>
+    <div><b>Reservá, apartá o preordená</b>Lo que viene en camino lo podés asegurar desde ya. ¿No ves tu talla o color? Escribinos: puede venir algo en camino y trabajamos otros colores bajo preorden.</div>
   </section>
 
   <footer class="foot">
     <img src="../assets/cisne.png" alt="">
     Cada entrega es un mensaje que llega.
     <div class="upd" id="upd"></div>
-    <div style="margin-top:10px"><a href="../terminos/" style="color:var(--coral);font-weight:500;text-decoration:none">Términos de compra</a></div>
   </footer>
 </main>
 
@@ -163,7 +191,7 @@ let items = [], fotos = {}, catalogo = [], catById = {};
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const crc = n => "₡" + Math.round(n).toLocaleString("es-CR").replace(/,/g,".").replace(/ /g,".");
-const SYS = { W:{k:"US Women",l:"Mujer",h:"mujer"}, M:{k:"US Men",l:"Hombre",h:"hombre"}, R:{k:null,l:"Ropa",h:"ropa"} };
+const SYS = { W:{k:"US Women",l:"Mujer",h:"mujer"}, M:{k:"US Men",l:"Hombre",h:"hombre"}, R:{k:null,l:"Ropa",h:"ropa"}, P:{k:null,l:"Promos",h:"promos"} };
 const sysOf = t => /US Women/i.test(t) ? "W" : /US Men/i.test(t) ? "M" : "R";
 const sizeShort = t => String(t).replace(/\s*US (Women|Men)/i,"").trim();
 const sizeNum = t => { const m = String(t).match(/[\d.]+/); if (m) return parseFloat(m[0]); const o={XS:1,S:2,M:3,L:4,XL:5,XXL:6}; return 100+(o[String(t).toUpperCase()]||9); };
@@ -266,6 +294,50 @@ function pictureHTML(g){
 }
 function phStyle(g){ return fotoOf(g) ? "background:#fff" : `background:${bgFor(palette(g.color).main)}`; }
 
+// ---------- stock: formato compacto, preórdenes, promos y tallas unisex ----------
+function expandTallas(txt){
+  const out = [];
+  String(txt||"").split(/[;\/\n]/).forEach(part => {
+    part = part.trim(); if (!part) return;
+    const suf = /wom|muj|\bw\b/i.test(part) ? "US Women" : (/men|homb|\bm\b/i.test(part) ? "US Men" : "");
+    if (!/\d/.test(part)){ part.split(",").map(t=>t.trim()).filter(Boolean).forEach(t=>out.push(t)); return; }
+    part.replace(/[A-Za-zñÑ]+/g," ").split(",").forEach(tok => {
+      tok = tok.trim(); if (!tok) return;
+      const m = tok.match(/^([\d.]+)\s*-\s*([\d.]+)$/);
+      if (m){ for (let x=parseFloat(m[1]); x<=parseFloat(m[2])+1e-9; x+=0.5) out.push((x+" "+suf).trim()); }
+      else if (/^[\d.]+$/.test(tok)) out.push((parseFloat(tok)+" "+suf).trim());
+    });
+  });
+  return out;
+}
+function cleanItem(i){ return {modelo:String(i.modelo||"").replace(/\s*\(.*?\)\s*/g," ").trim(), talla:String(i.talla||"").trim(), color:String(i.color||"").trim(), estado:String(i.estado||""), precio:Number(i.precio)||0, promo:Number(i.promo)||0, pre:!!i.pre}; }
+function usSize(i){ const m = i.talla.match(/^([\d.]+)\s*US\s*(Women|Men)$/i); return m ? {v:parseFloat(m[1]), w:/women/i.test(m[2])} : null; }
+function canonKey(i){ const s = usSize(i); let t = i.talla.toLowerCase(); if (s && /salomon/i.test(i.modelo)) t = (s.v + (s.w?0:1)) + "w"; return keyOf(i) + "|" + t; }
+function twinOf(i){ const s = usSize(i); if (!s || !/salomon/i.test(i.modelo)) return null; return {...i, twin:true, talla: s.w ? (s.v-1)+" US Men" : (s.v+1)+" US Women"}; }
+function parseStock(d){
+  let real = Array.isArray(d.i)
+    ? d.i.map(a => cleanItem({modelo:a[0], talla:a[1], color:a[2], estado:a[3]==="L"?"Listo para entrega":"En camino", precio:a[4], promo:a[5]}))
+    : (d.items||[]).map(cleanItem);
+  real = real.filter(i=>i.modelo&&i.talla);
+  const have = new Set(real.map(canonKey)), pre = [];
+  (d.p||[]).forEach(a => expandTallas(a[2]).forEach(t => {
+    const it = cleanItem({modelo:a[0], color:a[1], talla:t, estado:"En camino", precio:a[3], promo:a[4], pre:1});
+    const k = canonKey(it); if (have.has(k)) return; have.add(k); pre.push(it);
+  }));
+  const all = real.concat(pre);
+  return all.concat(all.map(twinOf).filter(Boolean));
+}
+const effP = i => i.promo>0 ? i.promo : i.precio;
+const isPromo = i => i.promo>0 && i.precio>0;
+const pctOff = list => Math.max(0, ...list.filter(isPromo).map(i=>Math.round((1-i.promo/i.precio)*100)));
+const promoPool = () => items.filter(i => isPromo(i) && !i.twin);
+const poolOf = s => s==="P" ? promoPool() : items.filter(i=>sysOf(i.talla)===s);
+const sizeLong = t => sizeShort(t) + (sysOf(t)==="W" ? " mujer" : sysOf(t)==="M" ? " hombre" : "");
+function promoBadge(list){
+  const p = list.filter(i=>i.promo>0 && i.precio); if (!p.length) return "";
+  return `<span class="off">-${Math.max(...p.map(i=>Math.round((1-i.promo/i.precio)*100)))}%</span>`;
+}
+
 // ---------- agrupar ----------
 function groups(list){
   const m = {};
@@ -273,9 +345,11 @@ function groups(list){
   return Object.values(m);
 }
 function priceFor(list){
-  const ps = list.map(i=>i.precio).filter(Boolean); if (!ps.length) return "";
-  const lo = Math.min(...ps), hi = Math.max(...ps);
-  return lo===hi ? crc(lo) : "Desde " + crc(lo);
+  const ps = list.filter(i=>i.precio); if (!ps.length) return "";
+  const lo = ps.reduce((a,b)=>effP(b)<effP(a)?b:a);
+  const desde = new Set(ps.map(effP)).size>1 ? "Desde " : "";
+  if (lo.promo>0) return `${desde}<span class="old">${crc(lo.precio)}</span><span class="new">${crc(lo.promo)}</span>`;
+  return desde + crc(effP(lo));
 }
 const uniqSizes = list => [...new Set(list.map(i=>i.talla))].sort((a,b)=>sizeNum(a)-sizeNum(b));
 
@@ -284,13 +358,26 @@ function render(){
   const seg = $("seg"); seg.innerHTML = "";
   Object.entries(SYS).forEach(([k,v]) => {
     if (k==="R" && !items.some(i=>sysOf(i.talla)==="R")) return;
-    const b = document.createElement("button"); b.textContent = v.l; if (state.sys===k) b.className="on";
+    if (k==="P" && !promoPool().length) return;
+    const b = document.createElement("button"); b.textContent = v.l; b.className = (k==="P"?"ptab":"") + (state.sys===k?" on":"");
     b.onclick = () => { if (state.sys===k) return; state.sys=k; state.size=null; go(); };
     seg.appendChild(b);
   });
 
+  const isP = state.sys==="P";
+  ["sizelbl","sizes","legend"].forEach(id => $(id).style.display = isP ? "none" : "");
+  $("guiaBtn").style.display = isP || state.sys==="R" ? "none" : "";
+  $("pinfo").style.display = isP ? "block" : "none";
+  if (isP){
+    $("uni").style.display = "none";
+    const gs = groups(promoPool()).sort((a,b)=>pctOff(b.items)-pctOff(a.items) || sortG(a,b));
+    $("out").innerHTML = section("Promos","Precio especial","promo","Precio rebajado mientras duren los pares.", gs, "promo");
+    $("out").querySelectorAll(".card").forEach(c => c.onclick = () => openSheet(c.dataset.k));
+    return;
+  }
   const pool = items.filter(i=>sysOf(i.talla)===state.sys);
   $("sizelbl").textContent = state.sys==="R" ? "Tu talla" : "Tu talla (US " + SYS[state.sys].l.toLowerCase() + ")";
+  $("uni").style.display = state.sys==="R" ? "none" : "";
   const sBox = $("sizes"); sBox.innerHTML = "";
   uniqSizes(pool).forEach(t => {
     const l = pool.filter(i=>i.talla===t), r = l.some(ready);
@@ -332,12 +419,15 @@ function section(title, pill, cls, sub, gs, way){
     <div class="grid">${gs.map(g=>cardHTML(g,way)).join("")}</div>`;
 }
 function cardHTML(g, way){
-  const rel = state.size ? g.items.filter(i=>i.talla===state.size && (way? !ready(i) : ready(i))) : g.items.filter(i => way ? !ready(i) : ready(i));
-  const sizes = uniqSizes(rel).map(sizeShort);
+  const pm = way==="promo";
+  const keep = i => pm ? isPromo(i) : (way ? !ready(i) : ready(i));
+  const rel = g.items.filter(i => (!state.size || i.talla===state.size) && keep(i));
+  if (pm) way = !rel.some(ready);
+  const sizes = uniqSizes(rel).map(pm ? sizeLong : sizeShort);
   const tl = state.size ? "" : `<div class="tl">${sizes.length>1?"Tallas":"Talla"} ${esc(sizes.join(" · "))}</div>`;
   const pr = priceFor(rel);
   return `<button class="card" data-k="${esc(g.key)}">
-    <div class="ph" style="${phStyle(g)}">${pictureHTML(g)}<span class="badge${way?" way":""}">${way?"En camino":"Disponible"}</span></div>
+    <div class="ph" style="${phStyle(g)}">${pictureHTML(g)}<span class="badge${way?" way":""}">${way?"En camino":"Disponible"}</span>${promoBadge(rel)}</div>
     <div class="tx"><span class="mdl">${esc(modelName(g.modelo))}</span><span class="clr">${esc(g.color)}</span>${tl}${pr?`<span class="pr">${pr}</span>`:""}</div>
   </button>`;
 }
@@ -345,7 +435,7 @@ function cardHTML(g, way){
 // ---------- detalle ----------
 let current = null, pickSize = null;
 function openSheet(k){
-  const g = groups(items).find(x=>x.key===k); if (!g) return;
+  const g = groups(poolOf(state.sys)).find(x=>x.key===k); if (!g) return;
   current = g; pickSize = state.size && g.items.some(i=>i.talla===state.size) ? state.size : null;
   drawSheet();
   $("scrim").classList.add("on"); $("sheet").classList.add("on");
@@ -387,6 +477,25 @@ function galleryHTML(g){
   if (!c || !c.ambiente) return `<div class="ph" style="${phStyle(g)}">${pictureHTML(g)}</div>`;
   return `<div class="gal" id="gal"><div class="ph" style="background:#fff"><img src="${esc(c.producto)}" alt=""></div><div class="ph"><img src="${esc(c.ambiente)}" alt=""></div></div><div class="dots"><i class="on"></i><i></i></div>`;
 }
+// ---------- guía de tallas (tabla oficial de Salomon, calzado unisex) ----------
+const GUIA = [["3.5","36","5","4","22"],["4","36 ⅔","5.5","4.5","22.5"],["4.5","37 ⅓","6","5","23"],["5","38","6.5","5.5","23.5"],["5.5","38 ⅔","7","6","24"],["6","39 ⅓","7.5","6.5","24.5"],["6.5","40","8","7","25"],["7","40 ⅔","8.5","7.5","25.5"],["7.5","41 ⅓","9","8","26"],["8","42","9.5","8.5","26.5"],["8.5","42 ⅔","10","9","27"],["9","43 ⅓","10.5","9.5","27.5"],["9.5","44","11","10","28"],["10","44 ⅔","11.5","10.5","28.5"],["10.5","45 ⅓","12","11","29"],["11","46","12.5","11.5","29.5"],["11.5","46 ⅔","13","12","30"],["12","47 ⅓","13.5","12.5","30.5"],["12.5","48","14","13","31"],["13","48 ⅔","14.5","13.5","31.5"],["13.5","49 ⅓","15","14","32"],["14","50","15.5","14.5","32.5"],["14.5","50 ⅔","16","15","33"]];
+function openGuide(){
+  const s = state.size && state.sys!=="R" ? sizeShort(state.size) : null, col = state.sys==="M" ? 3 : 2;
+  $("sheet").innerHTML = `<div class="grab"></div><button class="x" id="close" aria-label="Cerrar">×</button>
+    <div class="guia">
+      <h3>Guía de tallas</h3>
+      <div class="lead">Tabla oficial de Salomon para calzado unisex.${s?` Te marcamos tu talla ${esc(s)} ${state.sys==="M"?"hombre":"mujer"}.`:""}</div>
+      <table class="gt"><thead><tr><th>UK</th><th>EU</th><th>US<br>mujer</th><th>US<br>hombre</th><th>JP</th></tr></thead><tbody>
+      ${GUIA.map(r=>`<tr${s&&r[col]===s?' class="hit"':""}><td>${r[0]}</td><td>${r[1]}</td><td class="us">${r[2]}</td><td class="us">${r[3]}</td><td>${r[4].replace(".",",")}</td></tr>`).join("")}
+      </tbody></table>
+      <div class="jpnote"><b>El JP es la medida en centímetros.</b> Revisá la etiqueta de los zapatos que ya usás y compará los centímetros (JP o cm). Si la mayoría dicen 22,5, sos un 22,5 JP: o sea, un <b>5.5 US mujer</b> o un <b>4.5 US hombre</b>.</div>
+      <div class="cta"><a class="btn ghost" href="https://ig.me/m/${IG_USER}" target="_blank" rel="noopener">¿Seguís con dudas? Escribinos</a></div>
+    </div>`;
+  $("close").onclick = closeSheet;
+  $("scrim").classList.add("on"); $("sheet").classList.add("on"); $("sheet").scrollTop = 0;
+  const hit = $("sheet").querySelector("tr.hit"); if (hit) hit.scrollIntoView({block:"center"});
+}
+$("guiaBtn").onclick = openGuide;
 function closeSheet(){ $("scrim").classList.remove("on"); $("sheet").classList.remove("on"); }
 $("scrim").onclick = closeSheet;
 document.addEventListener("keydown", e => { if (e.key==="Escape") closeSheet(); });
@@ -406,11 +515,12 @@ function fromHash(){
   if (rest.length){ const want = rest.join(".").toUpperCase(); const t = uniqSizes(items.filter(i=>sysOf(i.talla)===k)).find(t=>sizeShort(t).toUpperCase()===want); if (t) state.size = t; }
 }
 window.addEventListener("hashchange", () => { fromHash(); render(); });
+const wantsGuide = () => /^#guia/i.test(location.hash);
 
 function showUpdated(ts){
   if (!ts) return;
   const d = new Date(ts);
-  $("upd").textContent = "Disponibilidad actualizada el " + d.toLocaleDateString("es-CR",{weekday:"long",day:"numeric",month:"long"});
+  $("upd").textContent = "Disponibilidad actualizada el " + d.toLocaleDateString("es-CR",{weekday:"long",day:"numeric",month:"long"}) + ", " + d.toLocaleTimeString("es-CR",{hour:"numeric",minute:"2-digit"});
 }
 
 (async () => {
@@ -418,10 +528,11 @@ function showUpdated(ts){
   try { const r = await fetch("catalogo.json",{cache:"no-store"}); if (r.ok) { catalogo = await r.json(); catalogo.forEach(c => catById[c.id] = c); } } catch(e){}
   try {
     const r = await fetch("stock.json",{cache:"no-store"}); const d = await r.json();
-    items = (d.items||[]).map(i => ({modelo:String(i.modelo||"").replace(/\s*\(.*?\)\s*/g," ").trim(), talla:String(i.talla||"").trim(), color:String(i.color||"").trim(), estado:String(i.estado||""), precio:Number(i.precio)||0})).filter(i=>i.modelo&&i.talla);
+    items = parseStock(d);
     showUpdated(d.updatedAt);
   } catch(e){ $("out").innerHTML = `<div class="msg">No pudimos cargar la disponibilidad. Probá de nuevo en un ratito.</div>`; return; }
   fromHash(); render();
+  if (wantsGuide()) openGuide();
 })();
 </script>
 </body>
