@@ -628,5 +628,12 @@
 "color": "Mustang / Bitter Chocolate",
 "producto": "fotos/gtx-26-mustang-bitter-chocolate.jpg",
 "ambiente": "fotos/gtx-26-mustang-bitter-chocolate-lifestyle.jpg"
+},
+{
+"id": "lab-74",
+"linea": "XT-6",
+"color": "Vanilla Ice / Rainy Day",
+"producto": "fotos/lab-74-vanilla-ice-rainy-day.jpg",
+"ambiente": ""
 }
 ]

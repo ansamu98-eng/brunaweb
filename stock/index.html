@@ -35,8 +35,8 @@
   .seg button{flex:1;border:0;background:transparent;padding:10px 4px;border-radius:11px;font-weight:500;font-size:14.5px;color:var(--muted)}
   .seg button.on{background:var(--coral);color:#fff;box-shadow:0 2px 6px rgba(248,80,59,.28)}
   .lbl{font-size:12.5px;font-weight:500;color:var(--muted);margin:16px 2px 9px}
-  .sizes{display:grid;grid-template-columns:repeat(auto-fill,minmax(58px,1fr));gap:8px}
-  .sz{position:relative;border:1.5px solid var(--line);background:#fff;border-radius:14px;height:52px;font-weight:600;font-size:17px;color:var(--choco)}
+  .sizes{display:grid;grid-template-columns:repeat(auto-fill,minmax(62px,1fr));gap:8px}
+  .sz{position:relative;border:1.5px solid var(--line);background:#fff;border-radius:14px;height:56px;line-height:1.15;font-weight:600;font-size:17px;color:var(--choco)}
   .sz small{display:block;font-size:9.5px;font-weight:500;color:var(--muted);margin-top:-3px;letter-spacing:.02em}
   .sz.on{background:var(--choco);border-color:var(--choco);color:#fff}
   .sz.on small{color:#e9d9cc}
@@ -184,7 +184,7 @@
     <div class="sizes" id="sizes"></div>
     <div class="pinfo" id="pinfo"><b>Todo lo que está rebajado</b>, en todas las tallas. Tocá un par para ver tallas y escribirnos.</div>
     <div class="legend" id="legend"><span><i style="background:var(--ready)"></i>Listo para entregar</span><span><i style="background:var(--way)"></i>Viene en camino</span></div>
-    <div class="uni" id="uni"><b>Salomon es unisex:</b> tu talla de hombre + 1 = tu talla de mujer (8.5 hombre = 9.5 mujer).</div>
+    <div class="uni" id="uni"><b>Salomon es unisex:</b> tu talla de hombre + 1 = tu talla de mujer (8.5 hombre = 9.5 mujer). Debajo de cada talla va el largo del pie en cm.</div>
     <button class="guia-btn" id="guiaBtn"><div><b>¿Dudas con tu talla?</b><span>Mirá la guía de tallas de Salomon: UK, EU, US y JP.</span></div><i>›</i></button>
   </section>
 
@@ -406,7 +406,8 @@ function render(){
     const l = pool.filter(i=>i.talla===t), r = l.some(ready);
     const b = document.createElement("button");
     b.className = "sz" + (state.size===t?" on":"") + (r?"":" wayonly");
-    b.innerHTML = `<span class="dot"></span>${esc(sizeShort(t))}`;
+    const cm = cmOf(t);
+    b.innerHTML = `<span class="dot"></span>${esc(sizeShort(t))}${cm?`<small>${cm}</small>`:""}`;
     b.onclick = () => { state.size = state.size===t ? null : t; go(); };
     sBox.appendChild(b);
   });
@@ -425,7 +426,7 @@ function render(){
     const r = groups(inSize.filter(ready)).sort(sortG);
     const rk = new Set(r.map(g=>g.key));
     const w = groups(inSize.filter(i=>!ready(i))).filter(g=>!rk.has(g.key)).sort(sortG);
-    const lbl = sizeShort(state.size) + (state.sys==="R" ? "" : " " + SYS[state.sys].l.toLowerCase());
+    const lbl = sizeShort(state.size) + (state.sys==="R" ? "" : " " + SYS[state.sys].l.toLowerCase() + (cmOf(state.size) ? ` (${cmOf(state.size)})` : ""));
     let h = "";
     h += r.length ? section(`Listos en talla ${lbl}`,"Hoy","ready","Te llegan en 1 a 2 días hábiles.", r, false)
                   : `<div class="sect"><h2>Talla ${esc(lbl)}</h2></div><div class="empty"><b>Hoy no tenemos pares listos en esta talla</b>${w.length?"Pero mirá lo que viene en camino, abajo.":"Escribinos y te lo conseguimos bajo pedido."}</div>`;
@@ -467,7 +468,7 @@ function drawSheet(){
   const g = current;
   const r = g.items.filter(ready), w = g.items.filter(i=>!ready(i));
   const rS = uniqSizes(r), wS = uniqSizes(w).filter(t=>!rS.includes(t));
-  const label = t => esc(sizeShort(t)) + (sysOf(t)==="R" ? "" : `<small> ${sysOf(t)==="W" ? "mujer" : "hombre"}</small>`);
+  const label = t => esc(sizeShort(t)) + (sysOf(t)==="R" ? "" : `<small> ${sysOf(t)==="W" ? "mujer" : "hombre"}${cmOf(t)?` (${cmOf(t)})`:""}</small>`);
   const tagRow = list => list.map(t=>`<button class="tag${pickSize===t?" sel":""}" data-t="${esc(t)}">${label(t)}</button>`).join("");
   const sel = pickSize ? g.items.filter(i=>i.talla===pickSize) : g.items;
   const pr = priceFor(pickSize ? (sel.filter(ready).length ? sel.filter(ready) : sel) : g.items);
@@ -502,6 +503,7 @@ function galleryHTML(g){
 }
 // ---------- guía de tallas (tabla oficial de Salomon, calzado unisex) ----------
 const GUIA = [["3.5","36","5","4","22"],["4","36 ⅔","5.5","4.5","22.5"],["4.5","37 ⅓","6","5","23"],["5","38","6.5","5.5","23.5"],["5.5","38 ⅔","7","6","24"],["6","39 ⅓","7.5","6.5","24.5"],["6.5","40","8","7","25"],["7","40 ⅔","8.5","7.5","25.5"],["7.5","41 ⅓","9","8","26"],["8","42","9.5","8.5","26.5"],["8.5","42 ⅔","10","9","27"],["9","43 ⅓","10.5","9.5","27.5"],["9.5","44","11","10","28"],["10","44 ⅔","11.5","10.5","28.5"],["10.5","45 ⅓","12","11","29"],["11","46","12.5","11.5","29.5"],["11.5","46 ⅔","13","12","30"],["12","47 ⅓","13.5","12.5","30.5"],["12.5","48","14","13","31"],["13","48 ⅔","14.5","13.5","31.5"],["13.5","49 ⅓","15","14","32"],["14","50","15.5","14.5","32.5"],["14.5","50 ⅔","16","15","33"]];
+const cmOf = t => { const k = sysOf(t); if (k==="R") return ""; const v = sizeShort(t); const r = GUIA.find(r => r[k==="W"?2:3]===v); return r ? r[4]+" cm" : ""; };
 function openGuide(){
   const s = state.size && state.sys!=="R" ? sizeShort(state.size) : null, col = state.sys==="M" ? 3 : 2;
   $("sheet").innerHTML = `<div class="grab"></div><button class="x" id="close" aria-label="Cerrar">×</button>
