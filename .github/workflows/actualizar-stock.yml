@@ -1,0 +1,37 @@
+name: Actualizar stock desde OneDrive
+
+on:
+  schedule:
+    - cron: "17 * * * *"   # cada hora
+  workflow_dispatch:        # boton para correrlo a mano
+
+permissions:
+  contents: write
+
+jobs:
+  stock:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Bajar stock.json de OneDrive
+        run: |
+          U='https://1drv.ms/u/c/9EF1BEB1144B0F0F/IQDKI76osxFuTrTxncq_1gFAAcymF6rd1dOfDay25f4mbyA?e=1vRYxb'
+          B64=$(printf '%s' "$U" | base64 -w0 | tr '/+' '_-' | tr -d '=')
+          ok=0
+          for url in "$U&download=1" "https://api.onedrive.com/v1.0/shares/u!$B64/root/content"; do
+            if curl -sSL -A "Mozilla/5.0" -o nuevo.json "$url" && python3 -c "import json;d=json.load(open('nuevo.json',encoding='utf-8'));assert len(d['i'])>0"; then
+              ok=1; break
+            fi
+          done
+          if [ "$ok" != 1 ]; then echo "No pude bajar el stock de OneDrive"; exit 1; fi
+          mv nuevo.json stock/stock.json
+
+      - name: Guardar si cambio
+        run: |
+          git config user.name "Bruna robot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet -- stock/stock.json; then echo "Sin cambios"; exit 0; fi
+          git add stock/stock.json
+          git commit -m "Stock automatico desde OneDrive"
+          git push
