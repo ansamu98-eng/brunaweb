@@ -333,7 +333,9 @@ function expandTallas(txt){
   });
   return out;
 }
-function cleanItem(i){ return {modelo:String(i.modelo||"").replace(/\s*\(.*?\)\s*/g," ").trim(), talla:String(i.talla||"").trim(), color:String(i.color||"").trim(), estado:String(i.estado||""), precio:Number(i.precio)||0, promo:Number(i.promo)||0, pre:!!i.pre}; }
+let ALIAS = {};
+const aliasColor = c => { const k = String(c||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim(); return ALIAS[k] || String(c||"").trim(); };
+function cleanItem(i){ return {modelo:String(i.modelo||"").replace(/\s*\(.*?\)\s*/g," ").trim(), talla:String(i.talla||"").trim(), color:aliasColor(i.color), estado:String(i.estado||""), precio:Number(i.precio)||0, promo:Number(i.promo)||0, pre:!!i.pre}; }
 function usSize(i){ const m = i.talla.match(/^([\d.]+)\s*US\s*(Women|Men)$/i); return m ? {v:parseFloat(m[1]), w:/women/i.test(m[2])} : null; }
 function canonKey(i){ const s = usSize(i); let t = i.talla.toLowerCase(); if (s && /salomon/i.test(i.modelo)) t = (s.v + (s.w?0:1)) + "w"; return keyOf(i) + "|" + t; }
 function twinOf(i){ const s = usSize(i); if (!s || !/salomon/i.test(i.modelo)) return null; return {...i, twin:true, talla: s.w ? (s.v-1)+" US Men" : (s.v+1)+" US Women"}; }
@@ -549,6 +551,7 @@ function showUpdated(ts){
 }
 
 (async () => {
+  try { const r = await fetch("alias.json",{cache:"no-store"}); if (r.ok) ALIAS = await r.json(); } catch(e){}
   try { const r = await fetch("fotos.json",{cache:"no-store"}); if (r.ok) fotos = await r.json(); } catch(e){}
   try { const r = await fetch("catalogo.json",{cache:"no-store"}); if (r.ok) { catalogo = await r.json(); catalogo.forEach(c => catById[c.id] = c); } } catch(e){}
   try {

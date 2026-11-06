@@ -179,14 +179,16 @@ let tt; function toast(t){ const el=$("toast"); el.textContent=t; el.classList.a
 
 (async () => {
   try {
+    const A = await fetch("../stock/alias.json",{cache:"no-store"}).then(r=>r.ok?r.json():{}).catch(()=>({}));
+    const al = c => A[String(c||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim()] || c;
     const [c, f, s] = await Promise.all([
       fetch("../stock/catalogo.json",{cache:"no-store"}).then(r=>r.json()),
       fetch("../stock/fotos.json",{cache:"no-store"}).then(r=>r.ok?r.json():{}).catch(()=>({})),
       fetch("../stock/stock.json",{cache:"no-store"}).then(r=>r.json()).catch(()=>({i:[],p:[]}))
     ]);
     cat = c; const byId = {}; cat.forEach(x => byId[x.id] = x);
-    (s.i||[]).forEach(a => { const m = match(a[0], a[2], f, byId); if (!m) return; const v = a[3]==="L" ? "l" : "c"; if (status[m.id]!=="l") status[m.id] = v; });
-    (s.p||[]).forEach(a => { const m = match(a[0], a[1], f, byId); if (m && !status[m.id]) status[m.id] = "c"; });
+    (s.i||[]).forEach(a => { const m = match(a[0], al(a[2]), f, byId); if (!m) return; const v = a[3]==="L" ? "l" : "c"; if (status[m.id]!=="l") status[m.id] = v; });
+    (s.p||[]).forEach(a => { const m = match(a[0], al(a[1]), f, byId); if (m && !status[m.id]) status[m.id] = "c"; });
   } catch(e){ $("out").innerHTML = `<p style="text-align:center;color:var(--muted);padding:30px">No pudimos cargar el catálogo. Probá de nuevo en un ratito.</p>`; return; }
   render();
 })();
