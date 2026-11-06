@@ -18,14 +18,34 @@ jobs:
         run: |
           U='https://1drv.ms/u/c/9EF1BEB1144B0F0F/IQDKI76osxFuTrTxncq_1gFAAcymF6rd1dOfDay25f4mbyA?e=1vRYxb'
           B64=$(printf '%s' "$U" | base64 -w0 | tr '/+' '_-' | tr -d '=')
-          ok=0
-          for url in "$U&download=1" "https://api.onedrive.com/v1.0/shares/u!$B64/root/content"; do
-            if curl -sSL -A "Mozilla/5.0" -o nuevo.json "$url" && python3 -c "import json;d=json.load(open('nuevo.json',encoding='utf-8'));assert len(d['i'])>0"; then
-              ok=1; break
-            fi
-          done
-          if [ "$ok" != 1 ]; then echo "No pude bajar el stock de OneDrive"; exit 1; fi
-          mv nuevo.json stock/stock.json
+          valido() { python3 -c "import json;d=json.load(open('nuevo.json',encoding='utf-8'));assert len(d['i'])>0" 2>/dev/null; }
+
+          # Metodo 1: token anonimo de OneDrive (el que usa la web de OneDrive)
+          TOK=$(curl -s -X POST https://api-badgerp.svc.ms/v1.0/token \
+                  -H "Content-Type: application/json" \
+                  -d '{"appId":"5cbed6ac-a083-4e14-b191-b4ba07653de2"}' \
+                | python3 -c "import json,sys;print(json.load(sys.stdin).get('token',''))" 2>/dev/null || true)
+          if [ -n "$TOK" ]; then
+            curl -sSL -o nuevo.json -H "Authorization: Badger $TOK" -H "Prefer: autoredeem" \
+              "https://my.microsoftpersonalcontent.com/_api/v2.0/shares/u!$B64/driveitem/content" || true
+            if valido; then echo "OK metodo 1"; mv nuevo.json stock/stock.json; exit 0; fi
+            echo "Metodo 1 fallo:"; head -c 300 nuevo.json; echo
+          else
+            echo "No se obtuvo token anonimo"
+          fi
+
+          # Metodo 2: enlace con download=1
+          curl -sSL -A "Mozilla/5.0" -o nuevo.json "$U&download=1" || true
+          if valido; then echo "OK metodo 2"; mv nuevo.json stock/stock.json; exit 0; fi
+          echo "Metodo 2 fallo:"; head -c 300 nuevo.json; echo
+
+          # Metodo 3: API vieja de OneDrive
+          curl -sSL -o nuevo.json -H "Prefer: redeemSharingLinkIfNecessary" \
+            "https://api.onedrive.com/v1.0/shares/u!$B64/root/content" || true
+          if valido; then echo "OK metodo 3"; mv nuevo.json stock/stock.json; exit 0; fi
+          echo "Metodo 3 fallo:"; head -c 300 nuevo.json; echo
+
+          echo "No pude bajar el stock de OneDrive"; exit 1
 
       - name: Guardar si cambio
         run: |
