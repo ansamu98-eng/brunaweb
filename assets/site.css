@@ -1,0 +1,38 @@
+/* Encabezado, menú y botón flotante compartidos por todas las páginas de Bruna.cr */
+:root{--b-coral:#F8503B;--b-off:#FAF6F0;--b-choco:#4A3428;--b-muted:#8b7a6f;--b-line:#ece4d9}
+
+.snav{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;font-family:Poppins,system-ui,sans-serif;color:#fff;z-index:9}
+.snav.solid{position:sticky;top:0;background:var(--b-choco)}
+.snav.overlay{position:absolute;top:0;left:0;right:0;padding:16px 18px;background:transparent}
+.snav a{color:#fff;text-decoration:none}
+.snav .logo img{height:26px;display:block}
+.snav.overlay .logo img{height:30px}
+.snav .links{display:none;align-items:center;gap:4px}
+.snav .links a{font-size:13.5px;font-weight:500;padding:7px 12px;border-radius:999px;opacity:.9}
+.snav .links a:hover{opacity:1;background:rgba(255,255,255,.12)}
+.snav .links a.on{opacity:1;background:rgba(255,255,255,.18)}
+.snav .burger{width:40px;height:40px;border-radius:12px;border:1.5px solid rgba(255,255,255,.55);background:rgba(0,0,0,.12);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;padding:0}
+.snav .burger i{display:block;width:18px;height:2px;border-radius:2px;background:#fff}
+@media(min-width:820px){.snav .links{display:flex}.snav .burger{display:none}}
+
+.smenu{position:fixed;inset:0;z-index:30;background:var(--b-off);color:var(--b-choco);display:flex;flex-direction:column;padding:16px 22px max(24px,env(safe-area-inset-bottom));transform:translateY(-100%);transition:transform .35s cubic-bezier(.2,.8,.2,1);font-family:Poppins,system-ui,sans-serif;overflow:auto}
+.smenu.on{transform:none}
+.smenu a{color:inherit;text-decoration:none}
+.smenu .hd{display:flex;justify-content:space-between;align-items:center}
+.smenu .hd img{height:28px}
+.smenu .x{width:42px;height:42px;border-radius:12px;border:1.5px solid var(--b-line);background:#fff;font-size:22px;line-height:1;cursor:pointer;color:var(--b-choco)}
+.smenu ul{list-style:none;margin:26px 0 0;padding:0}
+.smenu li a{display:flex;justify-content:space-between;align-items:center;padding:15px 2px;border-bottom:1px solid var(--b-line);font-size:22px;font-weight:600;letter-spacing:-.01em}
+.smenu li a small{display:block;font-size:12.5px;font-weight:400;color:var(--b-muted);letter-spacing:0}
+.smenu li a::after{content:"›";color:var(--b-coral);font-size:26px;font-weight:400}
+.smenu li a.on{color:var(--b-coral)}
+.smenu .ft{margin-top:auto;padding-top:22px;display:flex;gap:10px}
+.smenu .ft a{flex:1;text-align:center;padding:14px;border-radius:14px;font-weight:600;font-size:15px}
+.smenu .ft a.ig{background:var(--b-coral);color:#fff}
+.smenu .ft a.wa{border:1.5px solid var(--b-line);background:#fff}
+.smenu .sl{text-align:center;font-size:11px;letter-spacing:.3em;color:var(--b-muted);margin-top:14px}
+
+.sfloat{position:fixed;right:16px;bottom:max(18px,env(safe-area-inset-bottom));z-index:8;display:flex;align-items:center;gap:8px;background:var(--b-coral);color:#fff;text-decoration:none;font-family:Poppins,system-ui,sans-serif;font-weight:600;font-size:14.5px;padding:12px 18px 12px 14px;border-radius:999px;box-shadow:0 6px 20px rgba(248,80,59,.35),0 2px 6px rgba(74,52,40,.18);transform:translateY(120px);opacity:0;transition:transform .3s ease,opacity .3s ease}
+.sfloat.on{transform:none;opacity:1}
+.sfloat svg{width:20px;height:20px}
+body.sheet-open .sfloat{opacity:0;pointer-events:none}

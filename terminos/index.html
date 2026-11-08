@@ -52,16 +52,7 @@
   footer .links{margin-top:10px;display:flex;justify-content:center;gap:16px}
   footer .links a{color:var(--coral);text-decoration:none;font-weight:500}
 </style>
-<style>
-.bnav{position:sticky;top:0;z-index:9;background:#4A3428;color:#fff;font-family:Poppins,system-ui,sans-serif;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 14px}
-.bnav a{color:#fff;text-decoration:none}
-.bnav .home{display:flex;align-items:center;gap:7px;font-weight:600;font-size:13.5px}
-.bnav .home img{width:22px;height:22px}
-.bnav nav{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
-.bnav nav::-webkit-scrollbar{display:none}
-.bnav nav a{font-size:12.5px;font-weight:500;padding:6px 10px;border-radius:999px;white-space:nowrap;opacity:.85}
-.bnav nav a.on{background:rgba(255,255,255,.16);opacity:1}
-</style>
+
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Bruna.cr">
 <meta property="og:title" content="Bruna.cr · Términos de compra">
@@ -73,9 +64,10 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://brunacr.info/assets/og.jpg">
 <meta name="theme-color" content="#F8503B">
+<link rel="stylesheet" href="../assets/site.css">
 </head>
 <body>
-<div class="bnav"><a class="home" href="../"><img src="../assets/cisne_blanco.png" alt="">Inicio</a><nav><a href="../stock/">Mi talla</a><a href="../catalogo/">Catálogo</a><a href="../terminos/" class="on">Términos</a></nav></div>
+<script src="../assets/site.js" data-variant="solid"></script>
 
 <header class="hero">
   <a href="../"><img src="../assets/logo_blanco.png" alt="bruna"></a>
@@ -145,10 +137,5 @@
     <div class="links"><a href="../stock/">Ver disponible</a><a href="https://instagram.com/thebruna.cr">Instagram</a></div>
   </footer>
 </main>
-<script>
-function gcEvent(n,t){ try{ if(window.goatcounter&&window.goatcounter.count) window.goatcounter.count({path:n,title:t||n,event:true}); }catch(e){} }
-document.addEventListener("click",function(e){ var a=e.target.closest&&e.target.closest("a"); if(!a) return; var h=a.getAttribute("href")||""; if(/ig\.me/.test(h)) gcEvent("click-escribinos-instagram",location.pathname); else if(/instagram\.com/.test(h)) gcEvent("click-ver-instagram",location.pathname); },true);
-</script>
-<script data-goatcounter="https://brunacr.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>

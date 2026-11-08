@@ -14,7 +14,7 @@
   html,body{margin:0;background:var(--off);color:var(--choco);font-family:Poppins,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
   a{color:inherit;text-decoration:none}
   button{font:inherit;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
-  .hero{background:var(--choco);color:#fff;padding:18px 20px 70px;position:relative}
+  .hero{background:var(--choco);color:#fff;padding:6px 20px 70px;position:relative}
   .bar{display:flex;align-items:center;justify-content:space-between}
   .bar img{height:28px;display:block}
   .bar a.back{font-size:13px;font-weight:500;border:1.5px solid rgba(255,255,255,.5);border-radius:999px;padding:6px 14px}
@@ -64,16 +64,7 @@
   footer{text-align:center;padding:30px 20px 10px;color:var(--muted);font-size:12.5px}
   footer nav{display:flex;justify-content:center;gap:18px;margin-top:10px;font-weight:500;color:var(--choco)}
 </style>
-<style>
-.bnav{position:sticky;top:0;z-index:9;background:#4A3428;color:#fff;font-family:Poppins,system-ui,sans-serif;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 14px}
-.bnav a{color:#fff;text-decoration:none}
-.bnav .home{display:flex;align-items:center;gap:7px;font-weight:600;font-size:13.5px}
-.bnav .home img{width:22px;height:22px}
-.bnav nav{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
-.bnav nav::-webkit-scrollbar{display:none}
-.bnav nav a{font-size:12.5px;font-weight:500;padding:6px 10px;border-radius:999px;white-space:nowrap;opacity:.85}
-.bnav nav a.on{background:rgba(255,255,255,.16);opacity:1}
-</style>
+
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Bruna.cr">
 <meta property="og:title" content="Bruna.cr · Catálogo completo">
@@ -85,12 +76,12 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://brunacr.info/assets/og.jpg">
 <meta name="theme-color" content="#F8503B">
+<link rel="stylesheet" href="../assets/site.css">
 </head>
 <body>
-<div class="bnav"><a class="home" href="../"><img src="../assets/cisne_blanco.png" alt="">Inicio</a><nav><a href="../stock/">Mi talla</a><a href="../catalogo/" class="on">Catálogo</a><a href="../terminos/">Términos</a></nav></div>
+<script src="../assets/site.js" data-variant="solid"></script>
 
 <header class="hero">
-  <div class="bar"><a href="../"><img src="../assets/logo_blanco.png" alt="bruna"></a><a class="back" href="../stock/">Ver mi talla</a></div>
   <h1>Catálogo completo</h1>
   <p>Todos los colores de Salomon que trabajamos, aunque hoy no estén en bodega.</p>
 </header>
@@ -171,9 +162,9 @@ function openSheet(id){
       </div></div>`;
   $("cx").onclick = close;
   $("ig").addEventListener("click", async () => { try { await navigator.clipboard.writeText(msg); toast("Mensaje copiado. Pegalo en nuestro chat."); } catch(e){} });
-  $("scrim").classList.add("on"); $("sheet").classList.add("on");
+  $("scrim").classList.add("on"); $("sheet").classList.add("on"); document.body.classList.add("sheet-open");
 }
-function close(){ $("scrim").classList.remove("on"); $("sheet").classList.remove("on"); }
+function close(){ $("scrim").classList.remove("on"); $("sheet").classList.remove("on"); document.body.classList.remove("sheet-open"); }
 $("scrim").onclick = close;
 document.addEventListener("keydown", e => { if (e.key==="Escape") close(); });
 let tt; function toast(t){ const el=$("toast"); el.textContent=t; el.classList.add("on"); clearTimeout(tt); tt=setTimeout(()=>el.classList.remove("on"),2400); }
@@ -194,10 +185,5 @@ let tt; function toast(t){ const el=$("toast"); el.textContent=t; el.classList.a
   render();
 })();
 </script>
-<script>
-function gcEvent(n,t){ try{ if(window.goatcounter&&window.goatcounter.count) window.goatcounter.count({path:n,title:t||n,event:true}); }catch(e){} }
-document.addEventListener("click",function(e){ var a=e.target.closest&&e.target.closest("a"); if(!a) return; var h=a.getAttribute("href")||""; if(/ig\.me/.test(h)) gcEvent("click-escribinos-instagram",location.pathname); else if(/instagram\.com/.test(h)) gcEvent("click-ver-instagram",location.pathname); },true);
-</script>
-<script data-goatcounter="https://brunacr.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>

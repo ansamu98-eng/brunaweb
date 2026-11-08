@@ -74,6 +74,17 @@
   .card .tl{font-size:12px;color:var(--muted);margin-top:3px}
   .card .pr{font-size:14.5px;font-weight:500;margin-top:auto;padding-top:7px}
 
+  .tools{display:flex;gap:8px;flex-wrap:wrap;margin:16px 2px 0}
+  .tools .q{flex:1 1 100%;position:relative}
+  .tools input{width:100%;font:inherit;font-size:14.5px;color:var(--choco);border:1.5px solid var(--line);background:#fff;border-radius:14px;padding:11px 14px 11px 38px;outline:none}
+  .tools input:focus{border-color:var(--choco)}
+  .tools .q svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--muted)}
+  .tools select{flex:1 1 0;min-width:0;font:inherit;font-size:13.5px;color:var(--choco);border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:9px 10px;appearance:none;-webkit-appearance:none;background-image:linear-gradient(45deg,transparent 50%,#8b7a6f 50%),linear-gradient(135deg,#8b7a6f 50%,transparent 50%);background-position:calc(100% - 16px) 52%,calc(100% - 11px) 52%;background-size:5px 5px;background-repeat:no-repeat;padding-right:26px}
+  @media(min-width:640px){.tools .q{flex:2 1 0}}
+  .nores{margin-top:22px}
+  .avisa{display:inline-flex;margin-top:12px;background:var(--coral);color:#fff;border-radius:12px;padding:10px 16px;font-weight:600;font-size:14px;text-decoration:none}
+  .linkbtn{background:none;border:0;padding:0;color:var(--coral);font-weight:600;font-size:13px;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+  .share{display:flex;justify-content:center;gap:18px;margin-top:12px}
   .empty{background:#fff;border-radius:20px;box-shadow:var(--shadow);padding:26px 18px;text-align:center;color:var(--muted);font-size:14px}
   .empty b{color:var(--choco);display:block;font-size:16px;margin-bottom:4px}
   .start{text-align:center;padding:34px 20px 10px;color:var(--muted)}
@@ -144,16 +155,7 @@
   .jpnote{background:#fff;border-radius:16px;box-shadow:var(--shadow);padding:13px 15px;margin:14px 0 0;font-size:13px;color:var(--muted)}
   .jpnote b{color:var(--choco);font-weight:600}
 </style>
-<style>
-.bnav{position:sticky;top:0;z-index:9;background:#4A3428;color:#fff;font-family:Poppins,system-ui,sans-serif;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 14px}
-.bnav a{color:#fff;text-decoration:none}
-.bnav .home{display:flex;align-items:center;gap:7px;font-weight:600;font-size:13.5px}
-.bnav .home img{width:22px;height:22px}
-.bnav nav{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
-.bnav nav::-webkit-scrollbar{display:none}
-.bnav nav a{font-size:12.5px;font-weight:500;padding:6px 10px;border-radius:999px;white-space:nowrap;opacity:.85}
-.bnav nav a.on{background:rgba(255,255,255,.16);opacity:1}
-</style>
+
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Bruna.cr">
 <meta property="og:title" content="Bruna.cr · ¿Qué hay en tu talla?">
@@ -165,13 +167,13 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://brunacr.info/assets/og.jpg">
 <meta name="theme-color" content="#F8503B">
+<link rel="stylesheet" href="../assets/site.css">
 </head>
 <body>
-<div class="bnav"><a class="home" href="../"><img src="../assets/cisne_blanco.png" alt="">Inicio</a><nav><a href="../stock/" class="on">Mi talla</a><a href="../catalogo/">Catálogo</a><a href="../terminos/">Términos</a></nav></div>
+<script src="../assets/site.js" data-variant="solid"></script>
 
 <header class="hero">
   <img class="swan-bg" src="../assets/cisne_blanco.png" alt="">
-  <img class="logo" src="../assets/logo_blanco.png" alt="bruna">
   <div class="slogan">A TU PASO</div>
   <h1>¿Qué hay en tu talla?</h1>
   <p>Elegí tu talla y mirá todo lo que tenemos para vos. 100% originales.</p>
@@ -188,6 +190,11 @@
     <button class="guia-btn" id="guiaBtn"><div><b>¿Dudas con tu talla?</b><span>Mirá la guía de tallas de Salomon: UK, EU, US y JP.</span></div><i>›</i></button>
   </section>
 
+  <div class="tools" id="tools">
+    <label class="q"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" type="search" placeholder="Buscar modelo o color, ej. Vainilla" autocomplete="off" aria-label="Buscar modelo o color"></label>
+    <select id="fline" aria-label="Línea"><option value="">Todas las líneas</option><option value="gtx">GORE-TEX</option><option value="lab">XT-6 LAB</option><option value="otro">Otras</option></select>
+    <select id="fsort" aria-label="Ordenar"><option value="">Recomendado</option><option value="asc">Precio: menor a mayor</option><option value="desc">Precio: mayor a menor</option></select>
+  </div>
   <div id="out"><div class="msg">Cargando lo disponible…</div></div>
 
   <section class="info">
@@ -209,12 +216,12 @@
 
 <script>
 const IG_USER = "thebruna.cr";
-const state = { sys:"W", size:null };
+const state = { sys:"W", size:null, q:"", line:"", sort:"" };
 let items = [], fotos = {}, catalogo = [], catById = {};
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const crc = n => "₡" + Math.round(n).toLocaleString("es-CR").replace(/,/g,".").replace(/ /g,".");
-const SYS = { W:{k:"US Women",l:"Mujer",h:"mujer"}, M:{k:"US Men",l:"Hombre",h:"hombre"}, R:{k:null,l:"Ropa",h:"ropa"}, P:{k:null,l:"Promos",h:"promos"} };
+const SYS = { W:{k:"US Women",l:"Mujer",h:"mujer"}, M:{k:"US Men",l:"Hombre",h:"hombre"}, R:{k:null,l:"Ropa",h:"ropa"}, P:{k:null,l:"Descuentos",h:"promos"} };
 const sysOf = t => /US Women/i.test(t) ? "W" : /US Men/i.test(t) ? "M" : "R";
 const sizeShort = t => String(t).replace(/\s*US (Women|Men)/i,"").trim();
 const sizeNum = t => { const m = String(t).match(/[\d.]+/); if (m) return parseFloat(m[0]); const o={XS:1,S:2,M:3,L:4,XL:5,XXL:6}; return 100+(o[String(t).toUpperCase()]||9); };
@@ -395,9 +402,9 @@ function render(){
   $("pinfo").style.display = isP ? "block" : "none";
   if (isP){
     $("uni").style.display = "none";
-    const gs = groups(promoPool()).sort((a,b)=>pctOff(b.items)-pctOff(a.items) || sortG(a,b));
-    $("out").innerHTML = section("Promos","Precio especial","promo","Precio rebajado mientras duren los pares.", gs, "promo");
-    $("out").querySelectorAll(".card").forEach(c => c.onclick = () => openSheet(c.dataset.k));
+    const gs = groups(vis(promoPool())).sort((a,b)=> state.sort ? sortG(a,b) : (pctOff(b.items)-pctOff(a.items) || sortG(a,b)));
+    $("out").innerHTML = (!gs.length && filtering()) ? noRes() : section("Descuentos especiales","Precio especial","promo","Precio rebajado mientras duren los pares.", gs, "promo");
+    bindOut();
     return;
   }
   const pool = items.filter(i=>sysOf(i.talla)===state.sys);
@@ -418,26 +425,48 @@ function render(){
   if (!items.length){ return; }
   if (!state.size){
     // Vista general: todo lo listo en esta categoría
-    const gs = groups(pool);
+    const gs = groups(vis(pool));
     const r = gs.filter(g=>g.items.some(ready)).sort(sortG), w = gs.filter(g=>!g.items.some(ready)).sort(sortG);
-    out.innerHTML = `<div class="start"><img src="../assets/cisne.png" alt=""><b>Tocá tu talla arriba</b>Te mostramos solo lo que hay en tu número. Mientras tanto, esto es lo que tenemos.</div>`
+    out.innerHTML = (!gs.length && filtering()) ? noRes() : `<div class="start"><img src="../assets/cisne.png" alt=""><b>Tocá tu talla arriba</b>Te mostramos solo lo que hay en tu número. Mientras tanto, esto es lo que tenemos.</div>`
       + section("Listos para entregarte","Hoy","ready", "Lo tenemos en nuestras manos.", r, false)
       + (w.length ? section("Vienen en camino","Muy pronto","way","Podés reservarlos o apartarlos desde ya.", w, true) : "");
   } else {
-    const inSize = pool.filter(i=>i.talla===state.size);
+    const inSize = vis(pool.filter(i=>i.talla===state.size));
     const r = groups(inSize.filter(ready)).sort(sortG);
     const rk = new Set(r.map(g=>g.key));
     const w = groups(inSize.filter(i=>!ready(i))).filter(g=>!rk.has(g.key)).sort(sortG);
     const lbl = sizeShort(state.size) + (state.sys==="R" ? "" : " " + SYS[state.sys].l.toLowerCase() + (cmOf(state.size) ? ` (${cmOf(state.size)})` : ""));
     let h = "";
     h += r.length ? section(`Listos en talla ${lbl}`,"Hoy","ready","Te llegan en 1 a 2 días hábiles.", r, false)
-                  : `<div class="sect"><h2>Talla ${esc(lbl)}</h2></div><div class="empty"><b>Hoy no tenemos pares listos en esta talla</b>${w.length?"Pero mirá lo que viene en camino, abajo.":"Escribinos y te lo conseguimos bajo pedido."}</div>`;
+                  : (filtering() && !w.length) ? noRes()
+                  : `<div class="sect"><h2>Talla ${esc(lbl)}</h2></div><div class="empty"><b>Hoy no tenemos pares listos en esta talla</b>${w.length?"Pero mirá lo que viene en camino, abajo.":"Escribinos y te lo conseguimos bajo pedido."}<br><a class="avisa" id="avisaTalla" href="https://ig.me/m/${IG_USER}" target="_blank" rel="noopener">Avisame cuando llegue mi talla</a></div>`;
     if (w.length) h += section(`En camino en talla ${lbl}`,"Muy pronto","way","Asegurá el tuyo con reserva o apartado.", w, true);
     out.innerHTML = h;
   }
-  out.querySelectorAll(".card").forEach(c => c.onclick = () => openSheet(c.dataset.k));
+  bindOut();
 }
-function sortG(a,b){ return a.modelo.localeCompare(b.modelo) || a.color.localeCompare(b.color); }
+function bindOut(){
+  const out = $("out");
+  out.querySelectorAll(".card").forEach(c => c.onclick = () => openSheet(c.dataset.k));
+  const cf = $("clearf"); if (cf) cf.onclick = () => { state.q = ""; state.line = ""; $("q").value = ""; $("fline").value = ""; render(); };
+  const av = $("avisaTalla"); if (av) av.addEventListener("click", () => {
+    const t = state.size, msg = `¡Hola Bruna! Busco talla ${sizeShort(t)}${sysOf(t)==="W"?" mujer":sysOf(t)==="M"?" hombre":""}${cmOf(t)?` (${cmOf(t)})`:""}. ¿Me avisan cuando les llegue algo en mi talla?`;
+    gcEvent("avisame-talla-"+SYS[state.sys].h+"-"+sizeShort(t).replace(".","-"), "Avisame talla "+sizeLong(t));
+    try { navigator.clipboard.writeText(msg); toast("Mensaje copiado. Pegalo en nuestro chat."); } catch(e){}
+  });
+}
+function sortBase(a,b){ return a.modelo.localeCompare(b.modelo) || a.color.localeCompare(b.color); }
+const minP = g => Math.min(...g.items.map(i=>effP(i)||1e12));
+function sortG(a,b){ if (state.sort==="asc") return minP(a)-minP(b) || sortBase(a,b); if (state.sort==="desc") return minP(b)-minP(a) || sortBase(a,b); return sortBase(a,b); }
+const lineKey = m => { const l = lineOf(m); return l==="gtx" ? "gtx" : l==="xt-6" ? "lab" : "otro"; };
+const fold = s => String(s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/vanilla/g,"vainilla");
+function vis(list){
+  const q = fold(state.q).trim().split(/\s+/).filter(Boolean);
+  return list.filter(i => (!state.line || lineKey(i.modelo)===state.line) && q.every(w => fold(modelName(i.modelo)+" "+i.modelo+" "+i.color).includes(w)));
+}
+const filtering = () => !!(state.q.trim() || state.line);
+const slugOf = g => fold(modelName(g.modelo)+" "+g.color).replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+function noRes(){ return `<div class="empty nores"><b>No encontramos pares con ese filtro</b>Probá con otra palabra o <button class="linkbtn" id="clearf">quitá los filtros</button>. Si buscás un color que no ves, mirá el <a href="../catalogo/" style="color:var(--coral);font-weight:600">catálogo completo</a>.</div>`; }
 
 function section(title, pill, cls, sub, gs, way){
   if (!gs.length) return "";
@@ -461,11 +490,11 @@ function cardHTML(g, way){
 // ---------- detalle ----------
 let current = null, pickSize = null;
 function openSheet(k){
-  const g = groups(poolOf(state.sys)).find(x=>x.key===k); if (!g) return;
+  const g = groups(poolOf(state.sys)).find(x=>x.key===k) || groups(items.filter(i=>!i.twin)).find(x=>x.key===k); if (!g) return;
   gcEvent("ver-par-"+(g.modelo+" "+g.color).toLowerCase().replace(/[^a-z0-9]+/g,"-"), modelName(g.modelo)+" "+g.color);
   current = g; pickSize = state.size && g.items.some(i=>i.talla===state.size) ? state.size : null;
   drawSheet();
-  $("scrim").classList.add("on"); $("sheet").classList.add("on");
+  $("scrim").classList.add("on"); $("sheet").classList.add("on"); document.body.classList.add("sheet-open");
 }
 function drawSheet(){
   const g = current;
@@ -491,6 +520,7 @@ function drawSheet(){
         <button class="btn ghost" id="copy">Copiar mensaje para enviar</button>
       </div>
       <div class="note">${pickSize?"":"Tocá una talla para incluirla en el mensaje. "}Te respondemos y te ayudamos con la talla y el pago.</div>
+      <div class="share"><button class="linkbtn" id="share">Compartir este par</button><a class="linkbtn" id="avisaPar" href="https://ig.me/m/${IG_USER}" target="_blank" rel="noopener">¿No está tu talla? Avisame</a></div>
     </div>`;
   $("close").onclick = closeSheet;
   const gal = $("gal"); if (gal) gal.onscroll = () => { const i = Math.round(gal.scrollLeft / gal.clientWidth); $("sheet").querySelectorAll(".dots i").forEach((d,k)=>d.classList.toggle("on",k===i)); };
@@ -498,6 +528,17 @@ function drawSheet(){
   const copy = async () => { try { await navigator.clipboard.writeText(msg); toast("Mensaje copiado. Pegalo en nuestro chat."); return true; } catch(e){ return false; } };
   $("copy").onclick = async () => { if (!await copy()) toast(msg, 6000); };
   $("ig").addEventListener("click", () => { copy(); });
+  $("share").onclick = async () => {
+    const url = location.origin + location.pathname + "#par-" + slugOf(g), title = `${modelName(g.modelo)} ${g.color} · Bruna.cr`;
+    gcEvent("compartir-par-"+slugOf(g), title);
+    try { if (navigator.share) { await navigator.share({title, url}); return; } } catch(e){ return; }
+    try { await navigator.clipboard.writeText(url); toast("Link copiado. Mandalo por donde querás."); } catch(e){ toast(url, 6000); }
+  };
+  $("avisaPar").addEventListener("click", () => {
+    const m = `¡Hola Bruna! Me interesan los ${modelName(g.modelo)} ${g.color}, pero no veo mi talla. ¿Me avisan cuando les llegue? Mi talla es: `;
+    gcEvent("avisame-par-"+slugOf(g), "Avisame "+modelName(g.modelo)+" "+g.color);
+    try { navigator.clipboard.writeText(m); toast("Mensaje copiado. Agregá tu talla y envialo."); } catch(e){}
+  });
 }
 function galleryHTML(g){
   const c = fotoOf(g);
@@ -520,11 +561,11 @@ function openGuide(){
       <div class="cta"><a class="btn ghost" href="https://ig.me/m/${IG_USER}" target="_blank" rel="noopener">¿Seguís con dudas? Escribinos</a></div>
     </div>`;
   $("close").onclick = closeSheet;
-  $("scrim").classList.add("on"); $("sheet").classList.add("on"); $("sheet").scrollTop = 0;
+  $("scrim").classList.add("on"); $("sheet").classList.add("on"); document.body.classList.add("sheet-open"); $("sheet").scrollTop = 0;
   const hit = $("sheet").querySelector("tr.hit"); if (hit) hit.scrollIntoView({block:"center"});
 }
 $("guiaBtn").onclick = openGuide;
-function closeSheet(){ $("scrim").classList.remove("on"); $("sheet").classList.remove("on"); }
+function closeSheet(){ $("scrim").classList.remove("on"); $("sheet").classList.remove("on"); document.body.classList.remove("sheet-open"); if (/^#par-/.test(location.hash)) { try { history.replaceState(null,"","#"+SYS[state.sys].h); } catch(e){} } }
 $("scrim").onclick = closeSheet;
 document.addEventListener("keydown", e => { if (e.key==="Escape") closeSheet(); });
 let tt; function toast(t, ms=2400){ const el=$("toast"); el.textContent=t; el.classList.add("on"); clearTimeout(tt); tt=setTimeout(()=>el.classList.remove("on"), ms); }
@@ -537,13 +578,22 @@ function go(){
   render();
 }
 function fromHash(){
-  const h = decodeURIComponent((location.hash||"").slice(1)).toLowerCase(); if (!h) return;
+  const h = decodeURIComponent((location.hash||"").slice(1)).toLowerCase(); if (!h || h.startsWith("par-")) return;
   const [s, ...rest] = h.split("-");
   const k = Object.keys(SYS).find(x=>SYS[x].h===s); if (!k) return;
   state.sys = k; state.size = null;
   if (rest.length){ const want = rest.join(".").toUpperCase(); const t = uniqSizes(items.filter(i=>sysOf(i.talla)===k)).find(t=>sizeShort(t).toUpperCase()===want); if (t) state.size = t; }
 }
-window.addEventListener("hashchange", () => { fromHash(); render(); });
+window.addEventListener("hashchange", () => { fromHash(); render(); openFromHash(); });
+function openFromHash(){
+  const m = (location.hash||"").match(/^#par-([a-z0-9-]+)/i); if (!m) return;
+  const g = groups(items.filter(i=>!i.twin)).find(x => slugOf(x)===m[1].toLowerCase()); if (!g) return;
+  state.sys = sysOf(g.items[0].talla); render(); openSheet(g.key);
+}
+let qt;
+$("q").addEventListener("input", e => { state.q = e.target.value; clearTimeout(qt); qt = setTimeout(() => { render(); if (state.q.trim().length > 2) gcEvent("buscar-"+fold(state.q).trim().replace(/[^a-z0-9]+/g,"-"), "Buscó: "+state.q.trim()); }, 250); });
+$("fline").addEventListener("change", e => { state.line = e.target.value; render(); });
+$("fsort").addEventListener("change", e => { state.sort = e.target.value; render(); });
 const wantsGuide = () => /^#guia/i.test(location.hash);
 
 function showUpdated(ts){
@@ -563,12 +613,8 @@ function showUpdated(ts){
   } catch(e){ $("out").innerHTML = `<div class="msg">No pudimos cargar la disponibilidad. Probá de nuevo en un ratito.</div>`; return; }
   fromHash(); render();
   if (wantsGuide()) openGuide();
+  openFromHash();
 })();
 </script>
-<script>
-function gcEvent(n,t){ try{ if(window.goatcounter&&window.goatcounter.count) window.goatcounter.count({path:n,title:t||n,event:true}); }catch(e){} }
-document.addEventListener("click",function(e){ var a=e.target.closest&&e.target.closest("a"); if(!a) return; var h=a.getAttribute("href")||""; if(/ig\.me/.test(h)) gcEvent("click-escribinos-instagram",location.pathname); else if(/instagram\.com/.test(h)) gcEvent("click-ver-instagram",location.pathname); },true);
-</script>
-<script data-goatcounter="https://brunacr.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
