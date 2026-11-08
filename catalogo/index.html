@@ -153,6 +153,7 @@ function card(c){
 function openSheet(id){
   const c = cat.find(x=>x.id===id); if (!c) return;
   const s = status[id]||"p", [cls, txt] = ST[s];
+  gcEvent("catalogo-ver-"+id, c.linea+" "+c.color);
   const nombre = `${c.linea==="XT-6"?"XT-6 LAB":c.linea} ${pretty(c.color)}`;
   const msg = s==="l" ? `¡Hola Bruna! Me interesan los ${nombre}. ¿En qué tallas los tienen?`
             : s==="c" ? `¡Hola Bruna! Me interesan los ${nombre} que vienen en camino. ¿Cómo hago para reservarlos?`
@@ -193,5 +194,10 @@ let tt; function toast(t){ const el=$("toast"); el.textContent=t; el.classList.a
   render();
 })();
 </script>
+<script>
+function gcEvent(n,t){ try{ if(window.goatcounter&&window.goatcounter.count) window.goatcounter.count({path:n,title:t||n,event:true}); }catch(e){} }
+document.addEventListener("click",function(e){ var a=e.target.closest&&e.target.closest("a"); if(!a) return; var h=a.getAttribute("href")||""; if(/ig\.me/.test(h)) gcEvent("click-escribinos-instagram",location.pathname); else if(/instagram\.com/.test(h)) gcEvent("click-ver-instagram",location.pathname); },true);
+</script>
+<script data-goatcounter="https://brunacr.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>

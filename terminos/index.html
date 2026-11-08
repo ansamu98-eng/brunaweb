@@ -145,5 +145,10 @@
     <div class="links"><a href="../stock/">Ver disponible</a><a href="https://instagram.com/thebruna.cr">Instagram</a></div>
   </footer>
 </main>
+<script>
+function gcEvent(n,t){ try{ if(window.goatcounter&&window.goatcounter.count) window.goatcounter.count({path:n,title:t||n,event:true}); }catch(e){} }
+document.addEventListener("click",function(e){ var a=e.target.closest&&e.target.closest("a"); if(!a) return; var h=a.getAttribute("href")||""; if(/ig\.me/.test(h)) gcEvent("click-escribinos-instagram",location.pathname); else if(/instagram\.com/.test(h)) gcEvent("click-ver-instagram",location.pathname); },true);
+</script>
+<script data-goatcounter="https://brunacr.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>

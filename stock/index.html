@@ -462,6 +462,7 @@ function cardHTML(g, way){
 let current = null, pickSize = null;
 function openSheet(k){
   const g = groups(poolOf(state.sys)).find(x=>x.key===k); if (!g) return;
+  gcEvent("ver-par-"+(g.modelo+" "+g.color).toLowerCase().replace(/[^a-z0-9]+/g,"-"), modelName(g.modelo)+" "+g.color);
   current = g; pickSize = state.size && g.items.some(i=>i.talla===state.size) ? state.size : null;
   drawSheet();
   $("scrim").classList.add("on"); $("sheet").classList.add("on");
@@ -530,6 +531,7 @@ let tt; function toast(t, ms=2400){ const el=$("toast"); el.textContent=t; el.cl
 
 // ---------- enlace por talla (#mujer-7, #hombre-9-5, #ropa) ----------
 function go(){
+  if (state.size) gcEvent("talla-"+SYS[state.sys].h+"-"+sizeShort(state.size).toLowerCase().replace(".","-"), "Talla "+sizeLong(state.size));
   const h = SYS[state.sys].h + (state.size ? "-" + sizeShort(state.size).toLowerCase().replace(".","-") : "");
   try { if (location.hash !== "#"+h) history.replaceState(null,"","#"+h); } catch(e){}
   render();
@@ -563,5 +565,10 @@ function showUpdated(ts){
   if (wantsGuide()) openGuide();
 })();
 </script>
+<script>
+function gcEvent(n,t){ try{ if(window.goatcounter&&window.goatcounter.count) window.goatcounter.count({path:n,title:t||n,event:true}); }catch(e){} }
+document.addEventListener("click",function(e){ var a=e.target.closest&&e.target.closest("a"); if(!a) return; var h=a.getAttribute("href")||""; if(/ig\.me/.test(h)) gcEvent("click-escribinos-instagram",location.pathname); else if(/instagram\.com/.test(h)) gcEvent("click-ver-instagram",location.pathname); },true);
+</script>
+<script data-goatcounter="https://brunacr.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>
