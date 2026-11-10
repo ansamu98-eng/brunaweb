@@ -154,6 +154,9 @@
   .gt tr.hit td{background:#fde3df}
   .jpnote{background:#fff;border-radius:16px;box-shadow:var(--shadow);padding:13px 15px;margin:14px 0 0;font-size:13px;color:var(--muted)}
   .jpnote b{color:var(--choco);font-weight:600}
+  .card .eta{font-size:12px;font-weight:600;color:var(--way);margin-top:3px}
+  .sheet .eta{display:block;font-size:13.5px;font-weight:600;color:var(--way);margin-top:4px}
+  .tag .te{font-weight:500}
 </style>
 
 <meta property="og:type" content="website">
@@ -342,13 +345,13 @@ function expandTallas(txt){
 }
 let ALIAS = {};
 const aliasColor = c => { const k = String(c||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim(); return ALIAS[k] || String(c||"").trim(); };
-function cleanItem(i){ return {modelo:String(i.modelo||"").replace(/\s*\(.*?\)\s*/g," ").trim(), talla:String(i.talla||"").trim(), color:aliasColor(i.color), estado:String(i.estado||""), precio:Number(i.precio)||0, promo:Number(i.promo)||0, pre:!!i.pre}; }
+function cleanItem(i){ return {modelo:String(i.modelo||"").replace(/\s*\(.*?\)\s*/g," ").trim(), talla:String(i.talla||"").trim(), color:aliasColor(i.color), estado:String(i.estado||""), precio:Number(i.precio)||0, promo:Number(i.promo)||0, pre:!!i.pre, eta:String(i.eta||"")}; }
 function usSize(i){ const m = i.talla.match(/^([\d.]+)\s*US\s*(Women|Men)$/i); return m ? {v:parseFloat(m[1]), w:/women/i.test(m[2])} : null; }
 function canonKey(i){ const s = usSize(i); let t = i.talla.toLowerCase(); if (s && /salomon/i.test(i.modelo)) t = (s.v + (s.w?0:1)) + "w"; return keyOf(i) + "|" + t; }
 function twinOf(i){ const s = usSize(i); if (!s || !/salomon/i.test(i.modelo)) return null; return {...i, twin:true, talla: s.w ? (s.v-1)+" US Men" : (s.v+1)+" US Women"}; }
 function parseStock(d){
   let real = Array.isArray(d.i)
-    ? d.i.map(a => cleanItem({modelo:a[0], talla:a[1], color:a[2], estado:a[3]==="L"?"Listo para entrega":"En camino", precio:a[4], promo:a[5]}))
+    ? d.i.map(a => cleanItem({modelo:a[0], talla:a[1], color:a[2], estado:a[3]==="L"?"Listo para entrega":"En camino", precio:a[4], promo:a[5], eta:a[6]}))
     : (d.items||[]).map(cleanItem);
   real = real.filter(i=>i.modelo&&i.talla);
   const have = new Set(real.map(canonKey)), pre = [];
@@ -360,6 +363,11 @@ function parseStock(d){
   return all.concat(all.map(twinOf).filter(Boolean));
 }
 const effP = i => i.promo>0 ? i.promo : i.precio;
+// ---------- fecha estimada de llegada (la más próxima de los pares libres en camino) ----------
+function etaDate(list){ const hoy = new Date(); hoy.setHours(0,0,0,0); const ds = list.filter(i=>!ready(i)&&i.eta).map(i=>{ const d = new Date(i.eta+"T00:00:00"); return isNaN(d) ? null : d < hoy ? new Date(hoy.getTime()+7*864e5) : d; }).filter(Boolean); return ds.length ? new Date(Math.min(...ds)) : null; }
+const fmtEta = (d, long) => d.toLocaleDateString("es-CR", {day:"numeric", month: long ? "long" : "short"}).replace(".","");
+const etaLine = (list, way) => { const d = way && etaDate(list); return d ? `<span class="eta">Llega aprox. ${fmtEta(d)}</span>` : ""; };
+function tagEta(g, t){ const l = g.items.filter(i=>i.talla===t); if (l.some(ready)) return ""; const d = etaDate(l); return d ? `<small class="te"> · ${fmtEta(d)}</small>` : ""; }
 const isPromo = i => i.promo>0 && i.precio>0;
 const pctOff = list => Math.max(0, ...list.filter(isPromo).map(i=>Math.round((1-i.promo/i.precio)*100)));
 const promoPool = () => items.filter(i => isPromo(i) && !i.twin);
@@ -483,7 +491,7 @@ function cardHTML(g, way){
   const pr = priceFor(rel);
   return `<button class="card" data-k="${esc(g.key)}">
     <div class="ph" style="${phStyle(g)}">${pictureHTML(g)}<span class="badge${way?" way":""}">${way?"En camino":"Disponible"}</span>${promoBadge(rel)}</div>
-    <div class="tx"><span class="mdl">${esc(modelName(g.modelo))}</span><span class="clr">${esc(g.color)}</span>${tl}${pr?`<span class="pr">${pr}</span>`:""}</div>
+    <div class="tx"><span class="mdl">${esc(modelName(g.modelo))}</span><span class="clr">${esc(g.color)}</span>${tl}${etaLine(rel, way)}${pr?`<span class="pr">${pr}</span>`:""}</div>
   </button>`;
 }
 
@@ -501,7 +509,7 @@ function drawSheet(){
   const r = g.items.filter(ready), w = g.items.filter(i=>!ready(i));
   const rS = uniqSizes(r), wS = uniqSizes(w).filter(t=>!rS.includes(t));
   const label = t => esc(sizeShort(t)) + (sysOf(t)==="R" ? "" : `<small> ${sysOf(t)==="W" ? "mujer" : "hombre"}${cmOf(t)?` (${cmOf(t)})`:""}</small>`);
-  const tagRow = list => list.map(t=>`<button class="tag${pickSize===t?" sel":""}" data-t="${esc(t)}">${label(t)}</button>`).join("");
+  const tagRow = list => list.map(t=>`<button class="tag${pickSize===t?" sel":""}" data-t="${esc(t)}">${label(t)}${tagEta(g,t)}</button>`).join("");
   const sel = pickSize ? g.items.filter(i=>i.talla===pickSize) : g.items;
   const pr = priceFor(pickSize ? (sel.filter(ready).length ? sel.filter(ready) : sel) : g.items);
   const selReady = pickSize && sel.some(ready);
@@ -513,6 +521,7 @@ function drawSheet(){
       <div class="mdl">${esc(modelName(g.modelo))}</div>
       <h3>${esc(g.color)}</h3>
       ${pr?`<div class="pr">${pr}</div>`:""}
+      ${pickSize && !selReady && etaDate(sel) ? `<div class="eta">Llega aprox. el ${fmtEta(etaDate(sel), 1)}</div>` : ""}
       ${rS.length?`<div class="grp"><div class="t"><i style="background:var(--ready)"></i>Listos para entregar <span>· 1 a 2 días hábiles</span></div><div class="tags">${tagRow(rS)}</div></div>`:""}
       ${wS.length?`<div class="grp"><div class="t"><i style="background:var(--way)"></i>Vienen en camino <span>· reservá o apartá</span></div><div class="tags">${tagRow(wS)}</div></div>`:""}
       <div class="cta">
