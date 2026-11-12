@@ -1,9 +1,13 @@
-name: Actualizar stock desde OneDrive
+name: Actualizar stock desde Bruna ERP
+
+# La app Bruna ERP escribe el inventario libre en la hoja publica
+# "Bruna Disponible – Stock" (Google Sheets). Este flujo la lee y
+# genera stock/stock.json, que es lo que muestra la pagina.
 
 on:
   schedule:
-    - cron: "17 * * * *"   # cada hora
-  workflow_dispatch:        # boton para correrlo a mano
+    - cron: "*/15 * * * *"   # cada 15 minutos
+  workflow_dispatch:          # boton para correrlo a mano
 
 permissions:
   contents: write
@@ -14,44 +18,51 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Bajar stock.json de OneDrive
+      - name: Bajar stock de Google Sheets
+        env:
+          SHEET_ID: 1OS3tTGba0k-tb-arFQJphDkxTeqh24mNm5ZcLaLPYpo
         run: |
-          U='https://1drv.ms/u/c/9EF1BEB1144B0F0F/IQDKI76osxFuTrTxncq_1gFAAcymF6rd1dOfDay25f4mbyA?e=1vRYxb'
-          B64=$(printf '%s' "$U" | base64 -w0 | tr '/+' '_-' | tr -d '=')
-          valido() { python3 -c "import json;d=json.load(open('nuevo.json',encoding='utf-8'));assert len(d['i'])>0" 2>/dev/null; }
-
-          # Metodo 1: token anonimo de OneDrive (el que usa la web de OneDrive)
-          TOK=$(curl -s -X POST https://api-badgerp.svc.ms/v1.0/token \
-                  -H "Content-Type: application/json" \
-                  -d '{"appId":"5cbed6ac-a083-4e14-b191-b4ba07653de2"}' \
-                | python3 -c "import json,sys;print(json.load(sys.stdin).get('token',''))" 2>/dev/null || true)
-          if [ -n "$TOK" ]; then
-            curl -sSL -o nuevo.json -H "Authorization: Badger $TOK" -H "Prefer: autoredeem" \
-              "https://my.microsoftpersonalcontent.com/_api/v2.0/shares/u!$B64/driveitem/content" || true
-            if valido; then echo "OK metodo 1"; mv nuevo.json stock/stock.json; exit 0; fi
-            echo "Metodo 1 fallo:"; head -c 300 nuevo.json; echo
-          else
-            echo "No se obtuvo token anonimo"
-          fi
-
-          # Metodo 2: enlace con download=1
-          curl -sSL -A "Mozilla/5.0" -o nuevo.json "$U&download=1" || true
-          if valido; then echo "OK metodo 2"; mv nuevo.json stock/stock.json; exit 0; fi
-          echo "Metodo 2 fallo:"; head -c 300 nuevo.json; echo
-
-          # Metodo 3: API vieja de OneDrive
-          curl -sSL -o nuevo.json -H "Prefer: redeemSharingLinkIfNecessary" \
-            "https://api.onedrive.com/v1.0/shares/u!$B64/root/content" || true
-          if valido; then echo "OK metodo 3"; mv nuevo.json stock/stock.json; exit 0; fi
-          echo "Metodo 3 fallo:"; head -c 300 nuevo.json; echo
-
-          echo "No pude bajar el stock de OneDrive"; exit 1
+          curl -sSL -o stock.csv "https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=Stock"
+          python3 - <<'PY'
+          import csv, json, sys, datetime
+          rows = list(csv.DictReader(open('stock.csv', encoding='utf-8')))
+          def num(x):
+              try: return int(float(str(x).replace(',', '').strip() or 0))
+              except ValueError: return 0
+          items = []
+          for r in rows:
+              modelo, talla, color = (r.get('Modelo') or '').strip(), (r.get('Talla') or '').strip(), (r.get('Color') or '').strip()
+              if not modelo or not color: continue
+              precio, antes = num(r.get('Precio')), num(r.get('Precio antes'))
+              listo = (r.get('Estado') or '').strip().lower().startswith('listo')
+              regular, promo = (antes, precio) if antes and antes > precio else (precio, 0)
+              item = [modelo, talla, color, 'L' if listo else 'C', regular, promo]
+              eta = (r.get('Llegada estimada') or '').strip().lstrip("'")
+              if not listo and eta: item.append(eta)
+              items.append(item)
+          if not items:
+              print('La hoja vino vacia o no se pudo leer; se deja el stock anterior.'); sys.exit(0)
+          out = {'updatedAt': datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'), 'fuente': 'Bruna ERP (Google Sheets)', 'i': items}
+          json.dump(out, open('stock/stock.json', 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
+          print('OK:', len(items), 'filas')
+          PY
 
       - name: Guardar si cambio
         run: |
           git config user.name "Bruna robot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python3 - <<'PY'
+          import json, subprocess
+          # Ignorar el cambio si solo cambio la hora
+          try:
+              old = json.loads(subprocess.check_output(['git', 'show', 'HEAD:stock/stock.json']))
+          except Exception:
+              old = {}
+          new = json.load(open('stock/stock.json', encoding='utf-8'))
+          if old.get('i') == new.get('i'):
+              subprocess.run(['git', 'checkout', '--', 'stock/stock.json'])
+          PY
           if git diff --quiet -- stock/stock.json; then echo "Sin cambios"; exit 0; fi
           git add stock/stock.json
-          git commit -m "Stock automatico desde OneDrive"
+          git commit -m "Stock automatico desde Bruna ERP"
           git push
