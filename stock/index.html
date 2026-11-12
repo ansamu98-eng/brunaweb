@@ -99,6 +99,9 @@
   .foot{text-align:center;margin-top:34px;color:var(--muted);font-size:12.5px}
   .foot img{width:44px;display:block;margin:0 auto 8px}
   .foot .upd{font-size:11.5px;margin-top:6px;opacity:.8}
+  .updtop{display:inline-flex;align-items:center;gap:6px;margin-top:12px;font-size:12px;font-weight:500;background:rgba(255,255,255,.18);color:#fff;padding:5px 12px;border-radius:999px}
+  .updtop:empty{display:none}
+  .updtop::before{content:"";width:7px;height:7px;border-radius:50%;background:#fff}
 
   /* Sheet */
   .scrim{position:fixed;inset:0;background:rgba(40,25,18,.45);opacity:0;pointer-events:none;transition:opacity .2s;z-index:10}
@@ -180,6 +183,7 @@
   <div class="slogan">A TU PASO</div>
   <h1>¿Qué hay en tu talla?</h1>
   <p>Elegí tu talla y mirá todo lo que tenemos para vos. 100% originales.</p>
+  <div class="updtop" id="updtop"></div>
 </header>
 
 <main class="wrap">
@@ -608,7 +612,9 @@ const wantsGuide = () => /^#guia/i.test(location.hash);
 function showUpdated(ts){
   if (!ts) return;
   const d = new Date(ts);
-  $("upd").textContent = "Disponibilidad actualizada el " + d.toLocaleDateString("es-CR",{weekday:"long",day:"numeric",month:"long"}) + ", " + d.toLocaleTimeString("es-CR",{hour:"numeric",minute:"2-digit"});
+  const txt = d.toLocaleDateString("es-CR",{weekday:"long",day:"numeric",month:"long",timeZone:"America/Costa_Rica"}) + ", " + d.toLocaleTimeString("es-CR",{hour:"numeric",minute:"2-digit",timeZone:"America/Costa_Rica"});
+  $("upd").textContent = "Disponibilidad actualizada el " + txt;
+  $("updtop").textContent = "Actualizado el " + txt;
 }
 
 (async () => {

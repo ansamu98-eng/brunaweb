@@ -23,6 +23,7 @@ jobs:
           SHEET_ID: 1OS3tTGba0k-tb-arFQJphDkxTeqh24mNm5ZcLaLPYpo
         run: |
           curl -sSL -o stock.csv "https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=Stock"
+          curl -sSL -o info.csv "https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=Info&range=A1:B1&headers=0" || true
           python3 - <<'PY'
           import csv, json, sys, datetime
           rows = list(csv.DictReader(open('stock.csv', encoding='utf-8')))
@@ -42,7 +43,18 @@ jobs:
               items.append(item)
           if not items:
               print('La hoja vino vacia o no se pudo leer; se deja el stock anterior.'); sys.exit(0)
-          out = {'updatedAt': datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'), 'fuente': 'Bruna ERP (Google Sheets)', 'i': items}
+          # Hora en que la app actualizo el stock (hoja Info, hora de Costa Rica)
+          upd = None
+          try:
+              fila = next(csv.reader(open('info.csv', encoding='utf-8')))
+              t = fila[1].strip().lstrip("'")
+              datetime.datetime.strptime(t, '%Y-%m-%d %H:%M')
+              upd = t.replace(' ', 'T') + ':00-06:00'
+          except Exception:
+              pass
+          if not upd:
+              upd = datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+          out = {'updatedAt': upd, 'fuente': 'Bruna ERP (Google Sheets)', 'i': items}
           json.dump(out, open('stock/stock.json', 'w', encoding='utf-8'), ensure_ascii=False, separators=(',', ':'))
           print('OK:', len(items), 'filas')
           PY
