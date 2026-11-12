@@ -65,13 +65,13 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           python3 - <<'PY'
           import json, subprocess
-          # Ignorar el cambio si solo cambio la hora
+          # Guardar solo si cambio el stock o la hora en que la app lo actualizo
           try:
               old = json.loads(subprocess.check_output(['git', 'show', 'HEAD:stock/stock.json']))
           except Exception:
               old = {}
           new = json.load(open('stock/stock.json', encoding='utf-8'))
-          if old.get('i') == new.get('i'):
+          if old.get('i') == new.get('i') and old.get('updatedAt') == new.get('updatedAt'):
               subprocess.run(['git', 'checkout', '--', 'stock/stock.json'])
           PY
           if git diff --quiet -- stock/stock.json; then echo "Sin cambios"; exit 0; fi
