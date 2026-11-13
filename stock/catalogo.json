@@ -635,5 +635,38 @@
 "color": "Vanilla Ice / Rainy Day",
 "producto": "fotos/lab-74-vanilla-ice-rainy-day.jpg",
 "ambiente": ""
+},
+{
+"id": "lab-75",
+"linea": "XT-6 Expanse",
+"color": "Ancient Water",
+"producto": "fotos/lab-75-ancient-water-v2.jpg",
+"ambiente": "fotos/lab-75-ancient-water-lifestyle.jpg"
+},
+{
+"id": "gtx-27",
+"linea": "XT-6 GORE-TEX",
+"color": "Black Asphalt / Black",
+"producto": "fotos/gtx-27-black-asphalt-black-v2.jpg",
+"ambiente": "fotos/gtx-27-black-asphalt-black-lifestyle.jpg"
+},
+{
+"id": "xt4-1",
+"linea": "XT-4 OG",
+"color": "Black / Ebony / Silver Metallic",
+"producto": "fotos/xt4-01-black-ebony-silver.jpg",
+"ambiente": "fotos/xt4-01-black-ebony-silver-lifestyle.jpg"
+},
+{
+"id": "ropa-1",
+"linea": "Ropa",
+"color": "Sense Aero Graphic Deep Black",
+"producto": "fotos/ropa-01-sense-aero-deep-black.jpg"
+},
+{
+"id": "ropa-2",
+"linea": "Ropa",
+"color": "Sense Aero Graphic Whisper White",
+"producto": "fotos/ropa-02-sense-aero-whisper-white.jpg"
 }
 ]
