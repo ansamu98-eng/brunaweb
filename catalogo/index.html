@@ -125,12 +125,12 @@ function match(modelo, color, fotos, byId){
 }
 
 function render(){
-  const lines = ORDER.filter(l => cat.some(c=>c.linea===l));
+  const lines = ORDER.filter(l => cat.some(c=>c.linea===l && !(c.sinPreorden && !status[c.id])));
   $("chips").innerHTML = ["Todos", ...lines].map(l => `<button class="${l===filtro?"on":""}" data-l="${esc(l)}">${esc(l==="XT-6"?"XT-6 LAB":l)}</button>`).join("");
   $("chips").querySelectorAll("button").forEach(b => b.onclick = () => { filtro = b.dataset.l; render(); });
   const show = filtro==="Todos" ? lines : [filtro];
   $("out").innerHTML = show.map(l => {
-    const items = cat.filter(c=>c.linea===l).sort((a,b)=>rank(a)-rank(b));
+    const items = cat.filter(c=>c.linea===l && !(c.sinPreorden && !status[c.id])).sort((a,b)=>rank(a)-rank(b));
     return `<h2>${esc(l==="XT-6"?"XT-6 LAB":l)}</h2><div class="grid">${items.map(card).join("")}</div>`;
   }).join("");
   $("out").querySelectorAll(".card").forEach(c => c.onclick = () => openSheet(c.dataset.id));
