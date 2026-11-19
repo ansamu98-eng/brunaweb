@@ -111,7 +111,7 @@ const tok = c => norm(c).replace(/\bftw\b/g,"").split(" / ").map(s=>s.trim()).fi
 const lineOf = m => { m = m.toLowerCase(); return /gtx|gore/.test(m) ? "gtx" : /expanse/.test(m) ? "expanse" : /shadow|stormshade/.test(m) ? "stormshade" : /protective/.test(m) ? "protective" : /steel/.test(m) ? "steel" : /xt-6/.test(m) ? "xt-6" : "otro"; };
 const imgSrc = p => /^https?:\/\//.test(p) ? p : "../stock/" + p;
 const pretty = c => String(c).replace(/\s*\/\s*/g," / ").replace(/^Vanilla/i,"Vainilla");
-const ORDER = ["XT-6","XT-6 GORE-TEX","XT-6 Expanse","XT-6 Protective","XT-6 Steel Streets","XT-6 Stormshade","Colaboración"];
+const ORDER = ["XT-6","XT-6 GORE-TEX","XT-6 Expanse","XT-6 Protective","XT-6 Steel Streets","XT-6 Stormshade","XT-Whisper","Colaboración"];
 const ST = {l:["l","Entrega inmediata"], c:["c","En camino"], p:["p","Bajo preorden"]};
 let cat = [], status = {}, filtro = "Todos";
 

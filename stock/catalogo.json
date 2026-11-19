@@ -683,5 +683,12 @@
 "color": "Desert Tan / Earth Brown",
 "producto": "https://img01.ztat.net/article/spp-media-p1/1d84702612834a509f87138174f9f18a/47fa19d3ffe2492b94147322ead616f2.jpg?imwidth=800&filter=packshot",
 "ambiente": "https://img01.ztat.net/article/spp-media-p1/307b3e8d733f4d2ca266e366d1c1c502/f9c0bb9508eb40f39fc369ea79797037.jpg?imwidth=800"
+},
+{
+"id": "whisper-01",
+"linea": "XT-Whisper",
+"color": "Walnut / Bitter Choco / Vainilla Ice",
+"producto": "fotos/whisper-01-walnut-bitter-choco-vainilla-ice.jpg",
+"ambiente": "fotos/whisper-01-walnut-bitter-choco-vainilla-ice-lifestyle.jpg"
 }
 ]
