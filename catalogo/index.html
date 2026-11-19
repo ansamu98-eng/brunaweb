@@ -109,6 +109,7 @@ const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt
 const norm = c => String(c).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/vanilla/g,"vainilla").replace(/grey/g,"gray").replace(/\s*\/\s*/g," / ").replace(/\s+/g," ").trim();
 const tok = c => norm(c).replace(/\bftw\b/g,"").split(" / ").map(s=>s.trim()).filter(Boolean);
 const lineOf = m => { m = m.toLowerCase(); return /gtx|gore/.test(m) ? "gtx" : /expanse/.test(m) ? "expanse" : /shadow|stormshade/.test(m) ? "stormshade" : /protective/.test(m) ? "protective" : /steel/.test(m) ? "steel" : /xt-6/.test(m) ? "xt-6" : "otro"; };
+const imgSrc = p => /^https?:\/\//.test(p) ? p : "../stock/" + p;
 const pretty = c => String(c).replace(/\s*\/\s*/g," / ").replace(/^Vanilla/i,"Vainilla");
 const ORDER = ["XT-6","XT-6 GORE-TEX","XT-6 Expanse","XT-6 Protective","XT-6 Steel Streets","XT-6 Stormshade","Colaboración"];
 const ST = {l:["l","Entrega inmediata"], c:["c","En camino"], p:["p","Bajo preorden"]};
@@ -138,7 +139,7 @@ function render(){
 const rank = c => ({l:0,c:1,p:2})[status[c.id]||"p"];
 function card(c){
   const [cls, txt] = ST[status[c.id]||"p"];
-  return `<button class="card" data-id="${esc(c.id)}"><div class="ph"><img src="../stock/${esc(c.producto)}" alt="${esc(c.linea+" "+c.color)}" loading="lazy"><span class="pill ${cls}">${txt}</span></div>
+  return `<button class="card" data-id="${esc(c.id)}"><div class="ph"><img src="${esc(imgSrc(c.producto))}" alt="${esc(c.linea+" "+c.color)}" loading="lazy"><span class="pill ${cls}">${txt}</span></div>
     <div class="tx"><div class="ln">${esc(c.linea==="XT-6"?"XT-6 LAB":c.linea)}</div><div class="cl">${esc(pretty(c.color))}</div></div></button>`;
 }
 function openSheet(id){
@@ -153,7 +154,7 @@ function openSheet(id){
              : s==="c" ? "Viene en camino. Podés asegurarlo desde ya con una reserva o un apartado."
              : "Hoy no está en bodega ni en camino, pero lo trabajamos bajo preorden: te lo conseguimos con el 30% del valor del producto.";
   $("sheet").innerHTML = `<button class="x" id="cx" aria-label="Cerrar">×</button>
-    <div class="gal"><img src="../stock/${esc(c.producto)}" alt="">${c.ambiente?`<img src="../stock/${esc(c.ambiente)}" alt="">`:""}</div>
+    <div class="gal"><img src="${esc(imgSrc(c.producto))}" alt="">${c.ambiente?`<img src="${esc(imgSrc(c.ambiente))}" alt="">`:""}</div>
     <div class="body"><div class="ln">${esc(c.linea==="XT-6"?"XT-6 LAB":c.linea)}</div><h3>${esc(pretty(c.color))}</h3>
       <span class="pill ${cls}">${txt}</span><div class="st">${info}</div>
       <div class="btns">

@@ -669,5 +669,19 @@
 "linea": "Ropa",
 "color": "Sense Aero Graphic Whisper White",
 "producto": "fotos/ropa-02-sense-aero-whisper-white.jpg"
+},
+{
+"id": "gtx-zal-01",
+"linea": "XT-6 GORE-TEX",
+"color": "Earth Brown / Delicioso / Huckleberry",
+"producto": "https://img01.ztat.net/article/spp-media-p1/3fed4b64fad44114bd79660a8a815b0f/97ff4e18989a4787b79505c754b956fc.jpg?imwidth=800&filter=packshot",
+"ambiente": "https://img01.ztat.net/article/spp-media-p1/c0feb6d769764d4092a1505d49c5ce2b/990c111b20014cf0ae480f29664076e5.jpg?imwidth=800"
+},
+{
+"id": "lab-zal-01",
+"linea": "XT-6",
+"color": "Desert Tan / Earth Brown",
+"producto": "https://img01.ztat.net/article/spp-media-p1/1d84702612834a509f87138174f9f18a/47fa19d3ffe2492b94147322ead616f2.jpg?imwidth=800&filter=packshot",
+"ambiente": "https://img01.ztat.net/article/spp-media-p1/307b3e8d733f4d2ca266e366d1c1c502/f9c0bb9508eb40f39fc369ea79797037.jpg?imwidth=800"
 }
 ]
