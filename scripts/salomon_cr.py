@@ -7,6 +7,11 @@ inmediata; en modo equipo (?equipo=1) se marca en naranja como "Salomon CR".
 import csv, json, re, subprocess, sys, unicodedata, urllib.request
 
 MODELOS = {"XT-6": "Salomon XT-6", "XT-6 GORE-TEX": "Salomon XT-6 GTX"}
+# Colores de Salomon CR que se confunden con otro nombre del catalogo de Bruna
+NOMBRE_FIJO = {
+    "stormy weather/mustang/blue curacao": "Stormy Weather / Mustang",  # no es el Blue Curacao
+    "lunar rock/ftw silver/white": "Lunar Rock",  # no es el White Lunar Rock
+}
 SINON = {"vanilla": "vainilla", "grey": "gray", "milleau": "milieu", "choco": "chocolate", "asparagus": "aspargus"}
 
 
@@ -84,9 +89,17 @@ def main():
                 continue
             talla = f"{float(m.group()):g} US Men"
             w = palabras(color_cr)
-            cand = [x for x in lista if len(x[1]) >= 2 and x[1] <= w]
+            nombre_fijo = NOMBRE_FIJO.get(re.sub(r"\s*/\s*", "/", color_cr.strip().lower()))
+            if nombre_fijo:
+                w = palabras(nombre_fijo)
+                cand = [x for x in lista if x[1] == w]
+            else:
+                cand = [x for x in lista if len(x[1]) >= 2 and x[1] <= w]
             if cand:
                 c, _, precio, promo = max(cand, key=lambda x: (len(x[1]), -abs(len(w) - len(x[1]))))
+            elif nombre_fijo:
+                c, precio, promo = nombre_fijo, tipico, 0
+                sin_match.add(f"{modelo} | {color_cr}")
             else:
                 partes = []
                 for pz in re.split(r"\s*/\s*", color_cr.title()):
