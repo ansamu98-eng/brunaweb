@@ -326,8 +326,14 @@
 "id": "lab-52",
 "linea": "XT-6",
 "color": "Dragon Fire",
-"producto": "fotos/lab-52-dragon-fire.jpg",
+"producto": "fotos/lab-52-dragon-fire-v2.jpg",
 "ambiente": "fotos/lab-52-dragon-fire-lifestyle.jpg"
+},
+{
+"id": "xt6-bfr-01",
+"linea": "XT-6",
+"color": "Black Fiery Red",
+"producto": "fotos/xt6-bfr-01-black-fiery-red.jpg"
 },
 {
 "id": "lab-53",
@@ -564,7 +570,7 @@
 "id": "gtx-17",
 "linea": "XT-6 GORE-TEX",
 "color": "White Pepper / Shadow / Huckleberry",
-"producto": "fotos/gtx-17-white-pepper-shadow-huckleberry.jpg",
+"producto": "fotos/gtx-17-white-pepper-huckleberry-v2.jpg",
 "ambiente": "fotos/gtx-17-white-pepper-shadow-huckleberry-lifestyle.jpg"
 },
 {
@@ -627,7 +633,7 @@
 "id": "gtx-26",
 "linea": "XT-6 GORE-TEX",
 "color": "Mustang / Bitter Chocolate",
-"producto": "fotos/gtx-26-mustang-bitter-chocolate.jpg",
+"producto": "fotos/gtx-26-mustang-bitter-chocolate-v2.jpg",
 "ambiente": "fotos/gtx-26-mustang-bitter-chocolate-lifestyle.jpg"
 },
 {
