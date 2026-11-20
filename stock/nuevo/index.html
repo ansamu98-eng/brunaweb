@@ -9,7 +9,7 @@
 <link rel="icon" href="../assets/cisne.png">
 <meta name="description" content="Mirá lo disponible en tu talla en Bruna.cr: sneakers originales en Costa Rica.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500&family=Jost:wght@300;400;500&family=Poppins:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&family=Cormorant+Garamond:wght@500;600&family=Marcellus&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#FAF6F0; --paper:#FFFFFF; --ink:#4A3428; --mute:#8b7a6f; --hair:#ece4d9; --soft:#f3ece2;
@@ -196,6 +196,23 @@
 <meta name="theme-color" content="#F8503B">
 <link rel="stylesheet" href="../assets/site.css">
 <style>.snav,.sfloat,.smenu{font-family:Jost,system-ui,sans-serif}.snav .links a{font-weight:400}.sfloat{font-weight:400}</style>
+
+<style>
+  body[data-f="A"]{--serif:Poppins,sans-serif;--sans:Poppins,sans-serif}
+  body[data-f="A"] .hero h1,body[data-f="A"] .sect h2,body[data-f="A"] .sheet h3{font-weight:500;letter-spacing:-.02em}
+  body[data-f="A"] .card .clr{font-weight:500;font-size:15px}
+  body[data-f="B"]{--serif:Outfit,sans-serif;--sans:Outfit,sans-serif}
+  body[data-f="B"] .hero h1,body[data-f="B"] .sect h2,body[data-f="B"] .sheet h3{font-weight:400;letter-spacing:-.02em}
+  body[data-f="B"] .card .clr{font-weight:500;font-size:16px}
+  body[data-f="C"]{--serif:"Cormorant Garamond",serif;--sans:Poppins,sans-serif}
+  body[data-f="C"] .hero h1,body[data-f="C"] .sect h2,body[data-f="C"] .sheet h3,body[data-f="C"] .card .clr{font-weight:600}
+  body[data-f="C"] .card .clr{font-size:19px}
+  body[data-f="D"]{--serif:Marcellus,serif;--sans:Montserrat,sans-serif}
+  body[data-f="D"] .card .clr{font-size:16px}
+  .fsw{position:fixed;left:12px;bottom:max(16px,env(safe-area-inset-bottom));z-index:30;display:flex;align-items:center;gap:4px;background:#fff;border:1px solid var(--hair);border-radius:999px;padding:4px 6px 4px 12px;box-shadow:0 6px 18px rgba(74,52,40,.15);font:400 12.5px Poppins,sans-serif;color:var(--ink)}
+  .fsw button{border:0;background:none;width:30px;height:30px;border-radius:50%;font-weight:600}
+  .fsw button.on{background:var(--coral);color:#fff}
+</style>
 </head>
 <body>
 <script src="../assets/site.js" data-variant="solid"></script>
@@ -662,5 +679,7 @@ function showUpdated(ts){
   openFromHash();
 })();
 </script>
+<div class="fsw" id="fsw">Letra <button data-f="A">A</button><button data-f="B">B</button><button data-f="C">C</button><button data-f="D">D</button><button data-f="E">E</button></div>
+<script>(function(){var w=document.getElementById("fsw"),b=document.body,q=new URLSearchParams(location.search).get("f");function set(f){if(f==="E")b.removeAttribute("data-f");else b.setAttribute("data-f",f);w.querySelectorAll("button").forEach(function(x){x.classList.toggle("on",x.dataset.f===f)});try{history.replaceState(null,"","?f="+f+location.hash)}catch(e){}}w.querySelectorAll("button").forEach(function(x){x.onclick=function(){set(x.dataset.f)}});set(q||"A");})();</script>
 </body>
 </html>
