@@ -627,7 +627,7 @@ function drawSheet(){
 function galleryHTML(g){
   const c = fotoOf(g);
   if (!c || !c.ambiente) return `<div class="ph" style="${phStyle(g)}">${pictureHTML(g)}</div>`;
-  return `<div class="gal" id="gal"><div class="ph" style="background:#fff"><img src="${esc(c.producto)}" alt=""></div><div class="ph"><img src="${esc(c.ambiente)}" alt=""></div></div><div class="dots"><i class="on"></i><i></i></div>`;
+  return `<div class="gal" id="gal"><div class="ph" style="background:#fff"><img src="${esc(/cdn\.shopify\.com/.test(c.producto) ? c.producto + (c.producto.includes("?") ? "&" : "?") + "width=1400" : c.producto)}" alt=""></div><div class="ph"><img src="${esc(c.ambiente)}" alt=""></div></div><div class="dots"><i class="on"></i><i></i></div>`;
 }
 // ---------- guía de tallas (tabla oficial de Salomon, calzado unisex) ----------
 const GUIA = [["3.5","36","5","4","22"],["4","36 ⅔","5.5","4.5","22.5"],["4.5","37 ⅓","6","5","23"],["5","38","6.5","5.5","23.5"],["5.5","38 ⅔","7","6","24"],["6","39 ⅓","7.5","6.5","24.5"],["6.5","40","8","7","25"],["7","40 ⅔","8.5","7.5","25.5"],["7.5","41 ⅓","9","8","26"],["8","42","9.5","8.5","26.5"],["8.5","42 ⅔","10","9","27"],["9","43 ⅓","10.5","9.5","27.5"],["9.5","44","11","10","28"],["10","44 ⅔","11.5","10.5","28.5"],["10.5","45 ⅓","12","11","29"],["11","46","12.5","11.5","29.5"],["11.5","46 ⅔","13","12","30"],["12","47 ⅓","13.5","12.5","30.5"],["12.5","48","14","13","31"],["13","48 ⅔","14.5","13.5","31.5"],["13.5","49 ⅓","15","14","32"],["14","50","15.5","14.5","32.5"],["14.5","50 ⅔","16","15","33"]];
