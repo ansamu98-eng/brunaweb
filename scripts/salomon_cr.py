@@ -95,6 +95,24 @@ def main():
                 c, precio, promo = " / ".join(partes), tipico, 0
                 sin_match.add(f"{modelo} | {color_cr}")
             filas.append([modelo, talla, c, precio, promo])
+    # Ajustes desde el ERP (pestaña "Ajustes web"): colores que no se muestran y tallas agregadas a mano
+    ocultar, extras = set(), []
+    try:
+        for r in csv.DictReader(open("ajustes.csv", encoding="utf-8")):
+            tipo, m, c, t = [(r.get(k) or "").strip() for k in ("Tipo", "Modelo", "Color", "Talla")]
+            if not m or not c:
+                continue
+            if tipo.lower().startswith("no"):
+                ocultar.add((m, frozenset(palabras(c))))
+            elif tipo.lower().startswith("agreg") and t:
+                pr = next(((x[2], x[3]) for x in precios.get(m, []) if x[1] == palabras(c)), None)
+                if pr:
+                    nt = re.search(r"\d+(?:\.\d+)?", t)
+                    talla = f"{float(nt.group()):g} US " + ("Women" if re.search(r"wom|muj|\bw\b", t, re.I) else "Men")
+                    extras.append([m, talla, c, pr[0], pr[1], 1])
+    except Exception as e:
+        print("Sin ajustes:", e)
+    filas = [f for f in filas if (f[0], frozenset(palabras(f[2]))) not in ocultar] + extras
     vistos, s = set(), []
     for f in filas:
         k = (f[0], f[1], f[2].lower())
@@ -102,8 +120,14 @@ def main():
             vistos.add(k)
             s.append(f)
     s.sort(key=lambda f: (f[0], f[2], float(f[1].split()[0])))
-    out["s"] = s
+    out["s"] = [f[:5] for f in s]
     json.dump(out, open("stock/stock.json", "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
+    # Lista para el ERP (seccion Compras ocultas): la hoja la importa con IMPORTDATA
+    with open("stock/ocultas.csv", "w", encoding="utf-8", newline="") as fh:
+        w = csv.writer(fh)
+        w.writerow(["Modelo", "Color", "Talla", "Precio", "Promo", "Origen"])
+        for f in s:
+            w.writerow([f[0], f[2], f[1], f[3], f[4] or "", "Agregada" if len(f) > 5 else "Salomon CR"])
     print("Salomon CR:", len(s), "tallas disponibles")
     for x in sorted(sin_match):
         print("  sin nombre en Precios:", x)

@@ -70,6 +70,7 @@ jobs:
           SHEET_ID: 1OS3tTGba0k-tb-arFQJphDkxTeqh24mNm5ZcLaLPYpo
         run: |
           curl -sSL -o precios.csv "https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=Precios" || true
+          curl -sSL -o ajustes.csv "https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=Ajustes%20web" || true
           python3 scripts/salomon_cr.py || echo "Salomon CR fallo; se sigue sin esa lista"
 
       - name: Guardar si cambio
@@ -87,7 +88,7 @@ jobs:
           if old.get('i') == new.get('i') and old.get('p') == new.get('p') and old.get('s') == new.get('s') and old.get('updatedAt') == new.get('updatedAt'):
               subprocess.run(['git', 'checkout', '--', 'stock/stock.json'])
           PY
-          if git diff --quiet -- stock/stock.json; then echo "Sin cambios"; exit 0; fi
-          git add stock/stock.json
+          if git diff --quiet -- stock/stock.json stock/ocultas.csv && [ -z "$(git ls-files --others stock/ocultas.csv)" ]; then echo "Sin cambios"; exit 0; fi
+          git add stock/stock.json stock/ocultas.csv
           git commit -m "Stock automatico desde Bruna ERP"
           git push

@@ -239,7 +239,7 @@ const sizeShort = t => String(t).replace(/\s*US (Women|Men)/i,"").trim();
 const sizeNum = t => { const m = String(t).match(/[\d.]+/); if (m) return parseFloat(m[0]); const o={XS:1,S:2,M:3,L:4,XL:5,XXL:6}; return 100+(o[String(t).toUpperCase()]||9); };
 const ready = i => /listo/i.test(i.estado);
 // Modo equipo (solo Andrés y Pablo): ?equipo=1 marca lo que en realidad está en Salomon Costa Rica
-const EQUIPO = (() => { try { const q = new URLSearchParams(location.search).get("equipo"); if (q==="1") localStorage.setItem("brunaEquipo","1"); if (q==="0") localStorage.removeItem("brunaEquipo"); return localStorage.getItem("brunaEquipo")==="1"; } catch(e){ return /[?&]equipo=1/.test(location.search); } })();
+const EQUIPO = (() => { try { localStorage.removeItem("brunaEquipo"); } catch(e){} return false; })(); // el control interno vive en el ERP (Compras ocultas)
 const scOnly = list => { const r = list.filter(ready); return r.length>0 && r.every(i=>i.sc); };
 
 // ---------- nombres ----------
