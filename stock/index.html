@@ -161,6 +161,7 @@
   .sheet .eta{display:block;font-size:13.5px;font-weight:600;color:var(--way);margin-top:4px}
   .tag .te{font-weight:500}
   .tag.scr{border-color:#e8913a;background:#fff6ec}
+  .card .tsel{display:inline-block;margin-top:5px;font-size:12.5px;font-weight:700;color:var(--ink,#3b2a20);background:#f3ece4;border-radius:8px;padding:2px 8px}
   .badge.sc{background:#fff1e3;color:#c46a12}
   .tag .scr-m{color:#d9822b;font-weight:700;opacity:1}
   .scr-b{position:absolute;left:10px;bottom:10px;background:#d9822b;color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px}
@@ -425,7 +426,7 @@ function render(){
   $("pinfo").style.display = isP ? "block" : "none";
   if (isP){
     $("uni").style.display = "none";
-    const gs = groups(vis(promoPool())).sort((a,b)=> state.sort ? sortG(a,b) : (pctOff(b.items)-pctOff(a.items) || sortG(a,b)));
+    const gs = groups(vis(promoPool())).sort((a,b)=> homeFirst(a,b) || (state.sort ? sortG(a,b) : (pctOff(b.items)-pctOff(a.items) || sortG(a,b))));
     $("out").innerHTML = (!gs.length && filtering()) ? noRes() : section("Descuentos especiales","Precio especial","promo","Precio rebajado mientras duren los pares.", gs, "promo");
     bindOut();
     return;
@@ -449,13 +450,13 @@ function render(){
   if (!state.size){
     // Vista general: todo lo listo en esta categoría
     const gs = groups(vis(pool));
-    const r = gs.filter(g=>g.items.some(ready)).sort(sortG), w = gs.filter(g=>!g.items.some(ready)).sort(sortG);
+    const r = gs.filter(g=>g.items.some(ready)).sort((a,b)=>homeFirst(a,b)||sortG(a,b)), w = gs.filter(g=>!g.items.some(ready)).sort(sortG);
     out.innerHTML = (!gs.length && filtering()) ? noRes() : `<div class="start"><img src="../assets/cisne.png" alt=""><b>Tocá tu talla arriba</b>Te mostramos solo lo que hay en tu número. Mientras tanto, esto es lo que tenemos.</div>`
       + section("Listos para entregarte","Hoy","ready", "Lo tenemos en nuestras manos.", r, false)
       + (w.length ? section("Vienen en camino","Muy pronto","way","Podés reservarlos o apartarlos desde ya.", w, true) : "");
   } else {
     const inSize = vis(pool.filter(i=>i.talla===state.size));
-    const r = groups(inSize.filter(ready)).sort(sortG);
+    const r = groups(inSize.filter(ready)).sort((a,b)=>homeFirst(a,b)||sortG(a,b));
     const rk = new Set(r.map(g=>g.key));
     const w = groups(inSize.filter(i=>!ready(i))).filter(g=>!rk.has(g.key)).sort(sortG);
     const lbl = sizeShort(state.size) + (state.sys==="R" ? "" : " " + SYS[state.sys].l.toLowerCase() + (cmOf(state.size) ? ` (${cmOf(state.size)})` : ""));
@@ -480,6 +481,8 @@ function bindOut(){
 }
 function sortBase(a,b){ return a.modelo.localeCompare(b.modelo) || a.color.localeCompare(b.color); }
 const minP = g => Math.min(...g.items.map(i=>effP(i)||1e12));
+// Primero lo que está en la casa; después lo de compra oculta
+const homeFirst = (a,b) => (scOnly(a.items)?1:0) - (scOnly(b.items)?1:0);
 function sortG(a,b){ if (state.sort==="asc") return minP(a)-minP(b) || sortBase(a,b); if (state.sort==="desc") return minP(b)-minP(a) || sortBase(a,b); return sortBase(a,b); }
 const lineKey = m => { const l = lineOf(m); return l==="gtx" ? "gtx" : l==="xt-6" ? "lab" : "otro"; };
 const fold = s => String(s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/vanilla/g,"vainilla");
@@ -502,7 +505,7 @@ function cardHTML(g, way){
   const rel = g.items.filter(i => (!state.size || i.talla===state.size) && keep(i));
   if (pm) way = !rel.some(ready);
   const sizes = uniqSizes(rel).map(pm ? sizeLong : sizeShort);
-  const tl = state.size ? "" : `<div class="tl">${sizes.length>1?"Tallas":"Talla"} ${esc(sizes.join(" · "))}</div>`;
+  const tl = state.size ? `<div class="tsel">Talla ${esc(sizeLong(state.size))}${cmOf(state.size)?` · ${esc(cmOf(state.size))}`:""}</div>` : `<div class="tl">${sizes.length>1?"Tallas":"Talla"} ${esc(sizes.join(" · "))}</div>`;
   const pr = priceFor(rel);
   return `<button class="card" data-k="${esc(g.key)}">
     <div class="ph" style="${phStyle(g)}">${pictureHTML(g)}<span class="badge${way?" way":""}${!way && scOnly(rel)?" sc":""}">${way?"En camino":"Disponible"}</span>${promoBadge(rel)}</div>
