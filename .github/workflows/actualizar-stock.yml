@@ -71,7 +71,10 @@ jobs:
         run: |
           curl -sSL -o precios.csv "https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=Precios" || true
           curl -sSL -o ajustes.csv "https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=Ajustes%20web" || true
+          pip install --quiet pillow || true
           python3 scripts/salomon_cr.py || echo "Salomon CR fallo; se sigue sin esa lista"
+          python3 scripts/miniaturas.py || echo "No se pudieron crear miniaturas"
+          GOATCOUNTER_TOKEN="${{ secrets.GOATCOUNTER_TOKEN }}" python3 scripts/demanda.py || true
 
       - name: Guardar si cambio
         run: |
@@ -88,7 +91,7 @@ jobs:
           if old.get('i') == new.get('i') and old.get('p') == new.get('p') and old.get('s') == new.get('s') and old.get('updatedAt') == new.get('updatedAt'):
               subprocess.run(['git', 'checkout', '--', 'stock/stock.json'])
           PY
-          if git diff --quiet -- stock/stock.json stock/ocultas.csv && [ -z "$(git ls-files --others stock/ocultas.csv)" ]; then echo "Sin cambios"; exit 0; fi
-          git add stock/stock.json stock/ocultas.csv
+          for f in stock/stock.json stock/ocultas.csv stock/fotos_alta.json stock/fotos/sm stock/demanda.csv; do [ -e "$f" ] && git add -A "$f"; done
+          if git diff --cached --quiet; then echo "Sin cambios"; exit 0; fi
           git commit -m "Stock automatico desde Bruna ERP"
           git push

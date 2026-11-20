@@ -165,6 +165,10 @@
   .tag .scr-m{color:#d9822b;font-weight:700;opacity:1}
   .scr-b{position:absolute;left:10px;bottom:10px;background:#d9822b;color:#fff;font-size:11px;font-weight:700;padding:3px 8px;border-radius:999px}
   .scr-t{font-size:11.5px;font-weight:700;color:#d9822b;margin-top:3px}
+  .sizebar{position:fixed;left:0;right:0;top:0;z-index:8;display:flex;align-items:center;justify-content:center;gap:14px;padding:9px 16px;background:var(--choco);color:#fff;font-weight:500;font-size:14.5px;transform:translateY(-8px);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s}
+  .sizebar.on{opacity:1;transform:none;pointer-events:auto}
+  .sizebar button{border:1px solid rgba(255,255,255,.5);background:transparent;color:#fff;border-radius:999px;padding:3px 12px;font-size:12.5px}
+  @media (prefers-reduced-motion:reduce){.sizebar{transition:none}}
 </style>
 
 <meta property="og:type" content="website">
@@ -222,6 +226,7 @@
   </footer>
 </main>
 
+<div class="sizebar" id="sizebar" aria-live="polite"><span id="sizebarT"></span><button type="button" id="sizebarB">Cambiar</button></div>
 <div class="scrim" id="scrim"></div>
 <div class="sheet" id="sheet" role="dialog" aria-modal="true"></div>
 <div class="toast" id="toast"></div>
@@ -229,7 +234,7 @@
 <script>
 const IG_USER = "thebruna.cr";
 const state = { sys:"W", size:null, q:"", line:"", sort:"" };
-let items = [], fotos = {}, catalogo = [], catById = {};
+let items = [], fotos = {}, catalogo = [], catById = {}, FA = {};
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const crc = n => "₡" + Math.round(n).toLocaleString("es-CR").replace(/,/g,".").replace(/ /g,".");
@@ -329,11 +334,19 @@ function fotoOf(g){
     const pre = eq.length ? eq : cands.filter(x => { const t = tokColor(x.color); return want.length && want.every((w,i)=>t[i]===w); });
     if (pre.length===1) c = pre[0];
   }
+  const alta = FA[g.key]; if (alta) c = Object.assign({}, c || {}, {producto: alta});
   return fotoCache[g.key] = c || null;
+}
+// Miniaturas livianas para la cuadrícula; el detalle usa la foto completa
+function thumb(f){
+  if (/^fotos\/[^/]+\.(jpe?g|png)$/i.test(f)) return f.replace(/^fotos\//, "fotos/sm/").replace(/\.(jpe?g|png)$/i, ".webp");
+  if (/cdn\.shopify\.com/.test(f)) return f + (f.includes("?") ? "&" : "?") + "width=700";
+  if (/ztat\.net/.test(f)) return f.replace(/imwidth=\d+/, "imwidth=600");
+  return f;
 }
 function pictureHTML(g){
   const c = fotoOf(g), f = c && c.producto;
-  if (f) return `<img src="${esc(f)}" alt="${esc(g.modelo+" "+g.color)}" loading="lazy">`;
+  if (f) return `<img src="${esc(thumb(f))}" data-full="${esc(f)}" onerror="if(this.dataset.full&&this.src.indexOf(this.dataset.full)<0)this.src=this.dataset.full" alt="${esc(g.modelo+" "+g.color)}" loading="lazy" decoding="async">`;
   return sysOf(g.items[0].talla)==="R" ? teeSVG(g.color) : shoeSVG(g.color);
 }
 function phStyle(g){ return fotoOf(g) ? "background:#fff" : `background:${bgFor(palette(g.color).main)}`; }
@@ -468,7 +481,17 @@ function render(){
   }
   bindOut();
 }
+// Franja fija con la talla elegida (para que se vea en cualquier recorte)
+let pickerVisible = true;
+function updSizebar(){
+  const b = $("sizebar"); if (!b) return;
+  const on = !!state.size && !pickerVisible;
+  if (state.size) $("sizebarT").textContent = "Talla " + sizeLong(state.size) + (cmOf(state.size) ? " · " + cmOf(state.size) : "");
+  b.classList.toggle("on", on);
+  const nav = document.querySelector(".snav"); b.style.top = (nav ? Math.max(0, nav.getBoundingClientRect().bottom) : 0) + "px";
+}
 function bindOut(){
+  updSizebar();
   const out = $("out");
   out.querySelectorAll(".card").forEach(c => c.onclick = () => openSheet(c.dataset.k));
   const cf = $("clearf"); if (cf) cf.onclick = () => { state.q = ""; state.line = ""; $("q").value = ""; $("fline").value = ""; render(); };
@@ -599,7 +622,7 @@ let tt; function toast(t, ms=2400){ const el=$("toast"); el.textContent=t; el.cl
 
 // ---------- enlace por talla (#mujer-7, #hombre-9-5, #ropa) ----------
 function go(){
-  if (state.size) gcEvent("talla-"+SYS[state.sys].h+"-"+sizeShort(state.size).toLowerCase().replace(".","-"), "Talla "+sizeLong(state.size));
+  if (state.size){ const tk = SYS[state.sys].h+"-"+sizeShort(state.size).toLowerCase().replace(".","-"); gcEvent("talla-"+tk, "Talla "+sizeLong(state.size)); if (!items.some(i => i.talla===state.size && ready(i))) gcEvent("sin-stock-"+tk, "Sin stock en talla "+sizeLong(state.size)); }
   const h = SYS[state.sys].h + (state.size ? "-" + sizeShort(state.size).toLowerCase().replace(".","-") : "");
   try { if (location.hash !== "#"+h) history.replaceState(null,"","#"+h); } catch(e){}
   render();
@@ -632,15 +655,19 @@ function showUpdated(ts){
 }
 
 (async () => {
-  try { const r = await fetch("alias.json",{cache:"no-store"}); if (r.ok) ALIAS = await r.json(); } catch(e){}
-  try { const r = await fetch("fotos.json",{cache:"no-store"}); if (r.ok) fotos = await r.json(); } catch(e){}
-  try { const r = await fetch("catalogo.json",{cache:"no-store"}); if (r.ok) { catalogo = await r.json(); catalogo.forEach(c => catById[c.id] = c); } } catch(e){}
+  const getJ = u => fetch(u,{cache:"no-store"}).then(r => r.ok ? r.json() : null).catch(() => null);
+  const [al, fo, ca, fa] = await Promise.all([getJ("alias.json"), getJ("fotos.json"), getJ("catalogo.json"), getJ("fotos_alta.json")]);
+  if (al) ALIAS = al; if (fo) fotos = fo; if (fa) FA = fa;
+  if (ca) { catalogo = ca; catalogo.forEach(c => catById[c.id] = c); }
   try {
     const r = await fetch("stock.json",{cache:"no-store"}); const d = await r.json();
     items = parseStock(d);
     showUpdated(d.updatedAt);
   } catch(e){ $("out").innerHTML = `<div class="msg">No pudimos cargar la disponibilidad. Probá de nuevo en un ratito.</div>`; return; }
   fromHash(); render();
+  try { new IntersectionObserver(es => { pickerVisible = es[0].isIntersecting; updSizebar(); }, {rootMargin: "-60px 0px 0px 0px"}).observe($("sizes")); } catch(e){}
+  addEventListener("scroll", () => { const b = $("sizebar"); if (b && b.classList.contains("on")) updSizebar(); }, {passive: true});
+  $("sizebarB").onclick = () => $("sizes").scrollIntoView({behavior: "smooth", block: "center"});
   if (wantsGuide()) openGuide();
   openFromHash();
 })();

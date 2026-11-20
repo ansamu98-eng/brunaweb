@@ -71,6 +71,8 @@ def main():
         print("Se deja la lista de Salomon CR anterior.")
         return
     filas, sin_match = [], set()
+    fotos_cr = {}  # (modelo, color de Salomon CR) -> url de la foto
+    nombres_cr = {}  # (modelo, color de Salomon CR) -> nombre de Bruna
     for p in prods:
         modelo = MODELOS.get((p.get("title") or "").strip().upper())
         if not modelo:
@@ -80,10 +82,14 @@ def main():
         it = next((k for k, n in enumerate(nombres) if "talla" in n or "size" in n), 1)
         lista = precios.get(modelo, [])
         tipico = sorted(x[2] for x in lista)[len(lista) // 2] if lista else 0
+        imgs_por_variante = {vid: im.get("src") for im in p.get("images", []) for vid in (im.get("variant_ids") or [])}
         for v in p.get("variants", []):
+            color_cr = v.get(f"option{ic + 1}") or ""
+            src = (v.get("featured_image") or {}).get("src") or imgs_por_variante.get(v.get("id"))
+            if src and color_cr:
+                fotos_cr.setdefault((modelo, color_cr), src)
             if not v.get("available"):
                 continue
-            color_cr = v.get(f"option{ic + 1}") or ""
             m = re.search(r"\d+(?:\.\d+)?", str(v.get(f"option{it + 1}") or ""))
             if not color_cr or not m:
                 continue
@@ -108,6 +114,7 @@ def main():
                 c, precio, promo = " / ".join(partes), tipico, 0
                 sin_match.add(f"{modelo} | {color_cr}")
             filas.append([modelo, talla, c, precio, promo])
+            nombres_cr[(modelo, color_cr)] = c
     # Ajustes desde el ERP (pestaña "Ajustes web"): colores que no se muestran y tallas agregadas a mano
     ocultar, extras = set(), []
     try:
@@ -142,8 +149,53 @@ def main():
         for f in s:
             w.writerow([f[0], f[2], f[1], f[3], f[4] or "", "Agregada" if len(f) > 5 else "Salomon CR"])
     print("Salomon CR:", len(s), "tallas disponibles")
+    try:
+        fotos_alta(fotos_cr, nombres_cr)
+    except Exception as e:
+        print("No se pudieron revisar las fotos:", e)
     for x in sorted(sin_match):
         print("  sin nombre en Precios:", x)
+
+
+def norm_color(c):
+    t = unicodedata.normalize("NFD", str(c).lower())
+    t = "".join(ch for ch in t if unicodedata.category(ch) != "Mn")
+    t = t.replace("vanilla", "vainilla").replace("grey", "gray")
+    t = re.sub(r"\s*/\s*", " / ", t)
+    return re.sub(r"\s+", " ", t).strip()
+
+
+def ancho_local(ruta):
+    try:
+        from PIL import Image
+        return Image.open(ruta).size[0]
+    except Exception:
+        return 0
+
+
+def fotos_alta(fotos_cr, nombres_cr):
+    """Para cada color que se muestra, si no tiene foto o la foto es pequena (< 900 px),
+    usa la foto de Salomon CR (2000 px). Resultado: stock/fotos_alta.json {clave de la pagina: url}."""
+    fotos = json.load(open("stock/fotos.json", encoding="utf-8"))
+    cat = {x["id"]: x for x in json.load(open("stock/catalogo.json", encoding="utf-8"))}
+    lineas = {"Salomon XT-6": "XT-6", "Salomon XT-6 GTX": "XT-6 GORE-TEX"}
+    alta = {}
+    for (modelo, color_cr), nombre in nombres_cr.items():
+        url = fotos_cr.get((modelo, color_cr))
+        if not url:
+            continue
+        clave = modelo.lower().replace("salomon ", "", 1) + "|" + norm_color(nombre)
+        entrada = cat.get(fotos.get(clave, ""))
+        if not entrada:
+            entrada = next((x for x in cat.values() if x.get("linea") == lineas.get(modelo) and norm_color(x.get("color", "")) == norm_color(nombre)), None)
+        prod = (entrada or {}).get("producto", "")
+        if prod.startswith("http"):
+            continue  # foto externa grande (Zalando, etc.)
+        if prod and ancho_local("stock/" + prod) >= 900:
+            continue
+        alta[clave] = ("https:" + url) if url.startswith("//") else url
+    json.dump(alta, open("stock/fotos_alta.json", "w", encoding="utf-8"), ensure_ascii=False, indent=0, sort_keys=True)
+    print("Fotos en alta de Salomon CR:", len(alta))
 
 
 if __name__ == "__main__":
