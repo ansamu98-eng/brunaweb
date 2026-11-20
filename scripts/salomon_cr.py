@@ -173,29 +173,169 @@ def ancho_local(ruta):
         return 0
 
 
+# Tiendas oficiales de Salomon con catalogo abierto (Shopify). Salomon USA y Espana bloquean
+# el acceso automatico, asi que se usan estas, que tienen las mismas fotos oficiales.
+FUENTES = ["salomon.com.au", "salomon.co.nz", "salomon.com.tw", "salomon.com.mx", "salomon.cl"]
+SINON_FOTO = {"toast": "roast", "milleau": "milieu", "vanilla": "vainilla", "grey": "gray", "choco": "chocolate", "asparagus": "aspargus"}
+
+
+def pal_foto(txt):
+    t = unicodedata.normalize("NFD", str(txt).lower())
+    t = "".join(c for c in t if unicodedata.category(c) != "Mn")
+    return {SINON_FOTO.get(w, w) for w in re.findall(r"[a-z0-9]+", t)} - {"ftw", "and"}
+
+
+def tipo_modelo(txt):
+    t = str(txt).lower()
+    if "expanse" in t:
+        return "xt-6 expanse"
+    if "gore" in t or "gtx" in t:
+        return "xt-6 gtx"
+    return "xt-6"
+
+
+def bajar_tienda(dom):
+    prods = []
+    for pag in range(1, 8):
+        req = urllib.request.Request(f"https://{dom}/products.json?limit=250&page={pag}", headers={"User-Agent": "Mozilla/5.0 (BrunaFotos)"})
+        lote = json.load(urllib.request.urlopen(req, timeout=30)).get("products", [])
+        if not lote:
+            break
+        prods += lote
+    return prods
+
+
+def candidatos_fuentes():
+    """Lista de (tipo, segmentos de color, palabras, url) de las tiendas oficiales."""
+    out = []
+    for dom in FUENTES:
+        try:
+            prods = bajar_tienda(dom)
+        except Exception as e:
+            print("  no respondio", dom, e)
+            continue
+        for p in prods:
+            titulo = p.get("title") or ""
+            if not re.match(r"\s*(salomon\s+)?xt-6\b", titulo, re.I):
+                continue
+            if re.search(r"\b(mid|mm6|kids|junior|j)\b", titulo, re.I):
+                continue
+            tipo = tipo_modelo(titulo)
+            nombres = [str(o.get("name", "")).lower() for o in p.get("options", [])]
+            ic = next((k for k, n in enumerate(nombres) if "colo" in n or "顏色" in n or "颜色" in n), None)
+            imgs = {vid: im.get("src") for im in p.get("images", []) for vid in (im.get("variant_ids") or [])}
+            primera = (p.get("images") or [{}])[0].get("src")
+            vistos = set()
+            for v in p.get("variants", []) or [{}]:
+                color = v.get(f"option{ic + 1}") if ic is not None else None
+                if not color:
+                    color = re.sub(r"(?i)\b(salomon|xt-6|gore-tex|gtx|advanced|adv)\b", " ", titulo)
+                if color in vistos:
+                    continue
+                vistos.add(color)
+                src = (v.get("featured_image") or {}).get("src") or imgs.get(v.get("id")) or primera
+                if not src:
+                    continue
+                segs = [pal_foto(z) for z in re.split(r"\s*/\s*", color) if pal_foto(z)]
+                out.append((tipo, segs, set().union(*segs) if segs else set(), ("https:" + src) if src.startswith("//") else src))
+    return out
+
+
+def buscar_foto(tipo, nombre, cands):
+    w = pal_foto(nombre)
+    if len(w) < 2:
+        return None
+    mejor, puntos = None, None
+    for t, segs, words, url in cands:
+        if t != tipo or not w <= words:
+            continue
+        # el nombre de Bruna tiene que cubrir uno de los dos primeros colores de Salomon
+        if not any(sg and sg <= w for sg in segs[:2]):
+            continue
+        pts = (2 if segs and segs[0] <= w else 0, -len(words - w))
+        if puntos is None or pts > puntos:
+            mejor, puntos = url, pts
+    return mejor
+
+
+def norm_color(c):
+    t = unicodedata.normalize("NFD", str(c).lower())
+    t = "".join(ch for ch in t if unicodedata.category(ch) != "Mn")
+    t = t.replace("vanilla", "vainilla").replace("grey", "gray")
+    t = re.sub(r"\s*/\s*", " / ", t)
+    return re.sub(r"\s+", " ", t).strip()
+
+
+def ancho_local(ruta):
+    try:
+        from PIL import Image
+        return Image.open(ruta).size[0]
+    except Exception:
+        return 0
+
+
 def fotos_alta(fotos_cr, nombres_cr):
-    """Para cada color que se muestra, si no tiene foto o la foto es pequena (< 900 px),
-    usa la foto de Salomon CR (2000 px). Resultado: stock/fotos_alta.json {clave de la pagina: url}."""
+    """Para cada color XT-6 / GTX / Expanse que muestra la pagina, si no tiene foto o la foto es pequena
+    (< 900 px), busca la foto oficial: primero Salomon CR, despues otras tiendas oficiales de Salomon.
+    Resultado: stock/fotos_alta.json {clave de la pagina: url}."""
+    st = json.load(open("stock/stock.json", encoding="utf-8"))
     fotos = json.load(open("stock/fotos.json", encoding="utf-8"))
     cat = {x["id"]: x for x in json.load(open("stock/catalogo.json", encoding="utf-8"))}
-    lineas = {"Salomon XT-6": "XT-6", "Salomon XT-6 GTX": "XT-6 GORE-TEX"}
-    alta = {}
+    try:
+        alias = {k.lower(): v for k, v in json.load(open("stock/alias.json", encoding="utf-8")).items()}
+    except Exception:
+        alias = {}
+    lineas = {"xt-6": "XT-6", "xt-6 gtx": "XT-6 GORE-TEX", "xt-6 expanse": "XT-6 Expanse"}
+    mostrados = {}
+    for f in st.get("i", []) + st.get("s", []):
+        mostrados[(f[0], f[2])] = 1
+    for f in st.get("p", []):
+        mostrados[(f[0], f[1])] = 1
+    scr = {}
     for (modelo, color_cr), nombre in nombres_cr.items():
-        url = fotos_cr.get((modelo, color_cr))
-        if not url:
+        if fotos_cr.get((modelo, color_cr)):
+            scr[(modelo.lower().replace("salomon ", "", 1), norm_color(nombre))] = fotos_cr[(modelo, color_cr)]
+    try:
+        prev = json.load(open("stock/fotos_alta.json", encoding="utf-8"))
+    except Exception:
+        prev = {}
+    prev_faltan = set(prev.pop("_sin_foto", []))
+    import datetime
+    hora_de_revisar = datetime.datetime.utcnow().minute < 6
+    cands, alta, faltan = None, {}, []
+    for (modelo, color) in mostrados:
+        m = re.sub(r"\s*\(.*?\)\s*", " ", modelo).strip()
+        tipo = m.lower().replace("salomon ", "", 1)
+        if tipo not in lineas:
             continue
-        clave = modelo.lower().replace("salomon ", "", 1) + "|" + norm_color(nombre)
+        color = alias.get(color.lower().strip(), color.strip())
+        clave = tipo + "|" + norm_color(color)
+        if clave in alta:
+            continue
         entrada = cat.get(fotos.get(clave, ""))
         if not entrada:
-            entrada = next((x for x in cat.values() if x.get("linea") == lineas.get(modelo) and norm_color(x.get("color", "")) == norm_color(nombre)), None)
+            entrada = next((x for x in cat.values() if x.get("linea") == lineas[tipo] and norm_color(x.get("color", "")) == norm_color(color)), None)
         prod = (entrada or {}).get("producto", "")
-        if prod.startswith("http"):
-            continue  # foto externa grande (Zalando, etc.)
-        if prod and ancho_local("stock/" + prod) >= 900:
+        if prod.startswith("http") or (prod and ancho_local("stock/" + prod) >= 900):
             continue
-        alta[clave] = ("https:" + url) if url.startswith("//") else url
+        url = scr.get((tipo, norm_color(color))) or prev.get(clave)
+        if not url and clave in prev_faltan and not hora_de_revisar:
+            faltan.append(clave)
+            continue
+        if not url:
+            if cands is None:
+                cands = candidatos_fuentes()
+                print("  fotos oficiales revisadas:", len(cands))
+            url = buscar_foto(tipo, color, cands)
+        if url:
+            alta[clave] = ("https:" + url) if url.startswith("//") else url
+        else:
+            faltan.append(clave)
+    alta["_sin_foto"] = sorted(faltan)
     json.dump(alta, open("stock/fotos_alta.json", "w", encoding="utf-8"), ensure_ascii=False, indent=0, sort_keys=True)
-    print("Fotos en alta de Salomon CR:", len(alta))
+    print("Fotos en alta:", len(alta), "| sin foto oficial:", len(faltan))
+    for k in sorted(faltan):
+        print("  sin foto:", k)
 
 
 if __name__ == "__main__":
