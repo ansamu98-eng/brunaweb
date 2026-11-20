@@ -218,7 +218,7 @@ def candidatos_fuentes():
             titulo = p.get("title") or ""
             if not re.match(r"\s*(salomon\s+)?xt-6\b", titulo, re.I):
                 continue
-            if re.search(r"\b(mid|mm6|kids|junior|j|protective|stormshade|softground|ft|shadow|steel|nostalgia|lab|swoven|moto)\b", titulo, re.I):
+            if re.search(r"\b(mid|mm6|kids|junior|j|skyline|protective|stormshade|softground|ft|shadow|steel|nostalgia|lab|swoven|moto)\b", titulo, re.I):
                 continue
             tipo = tipo_modelo(titulo)
             nombres = [str(o.get("name", "")).lower() for o in p.get("options", [])]
