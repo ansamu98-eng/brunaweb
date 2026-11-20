@@ -218,7 +218,7 @@ def candidatos_fuentes():
             titulo = p.get("title") or ""
             if not re.match(r"\s*(salomon\s+)?xt-6\b", titulo, re.I):
                 continue
-            if re.search(r"\b(mid|mm6|kids|junior|j)\b", titulo, re.I):
+            if re.search(r"\b(mid|mm6|kids|junior|j|protective|stormshade|softground|ft|shadow|steel|nostalgia|lab|swoven|moto)\b", titulo, re.I):
                 continue
             tipo = tipo_modelo(titulo)
             nombres = [str(o.get("name", "")).lower() for o in p.get("options", [])]
@@ -275,8 +275,7 @@ def ancho_local(ruta):
 
 
 def fotos_alta(fotos_cr, nombres_cr):
-    """Para cada color XT-6 / GTX / Expanse que muestra la pagina, si no tiene foto o la foto es pequena
-    (< 900 px), busca la foto oficial: primero Salomon CR, despues otras tiendas oficiales de Salomon.
+    """Para cada color XT-6 / GTX / Expanse que muestra la pagina busca la foto oficial: primero Salomon CR, despues otras tiendas oficiales de Salomon.
     Resultado: stock/fotos_alta.json {clave de la pagina: url}."""
     st = json.load(open("stock/stock.json", encoding="utf-8"))
     fotos = json.load(open("stock/fotos.json", encoding="utf-8"))
@@ -316,7 +315,8 @@ def fotos_alta(fotos_cr, nombres_cr):
         if not entrada:
             entrada = next((x for x in cat.values() if x.get("linea") == lineas[tipo] and norm_color(x.get("color", "")) == norm_color(color)), None)
         prod = (entrada or {}).get("producto", "")
-        if prod.startswith("http") or (prod and ancho_local("stock/" + prod) >= 900):
+        # Andres pidio la foto oficial para todos los colores; la foto propia queda si no hay oficial
+        if prod.startswith("http"):
             continue
         url = scr.get((tipo, norm_color(color))) or prev.get(clave)
         if not url and clave in prev_faltan and not hora_de_revisar:
