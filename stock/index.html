@@ -164,6 +164,14 @@
   .btn{display:flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:999px;padding:15px;font-weight:400;font-size:15px;letter-spacing:.01em;text-decoration:none}
   .btn.main{background:var(--coral);color:#fff}
   .btn.ghost{background:transparent;color:var(--ink);border:1px solid #cfc8bf}
+  .cta.stick{position:sticky;bottom:0;z-index:3;background:var(--bg,#FAF6F0);padding:12px 0 6px;margin-top:18px}
+  .btn.off{opacity:.55}
+  .paso{font-size:12px;color:var(--mute,#8b7a6f);text-align:center;margin-top:7px}
+  .garant{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 14px;margin-top:10px;font-size:12px;color:var(--ink,#4A3428)}
+  .garant span::before{content:"✓ ";color:var(--ready,#2f7d55);font-weight:600}
+  .tags.flash{animation:flash 1s ease 2}
+  @keyframes flash{50%{box-shadow:0 0 0 3px rgba(248,80,59,.35);border-radius:14px}}
+  @media (prefers-reduced-motion:reduce){.tags.flash{animation:none}}
   .note{font-size:12.5px;color:var(--mute);margin-top:12px;font-weight:300}
   .toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,30px);background:var(--ink);color:#fff;padding:11px 18px;border-radius:999px;font-size:13.5px;font-weight:300;opacity:0;transition:.3s;z-index:20;pointer-events:none}
   .toast.on{opacity:1;transform:translate(-50%,0)}
@@ -203,6 +211,7 @@
   .hero h1,.sect h2,.sheet h3{font-weight:500;letter-spacing:-.02em}
   .card .clr{font-weight:500;font-size:15px}
 </style>
+<script src="../assets/meta.js"></script>
 </head>
 <body>
 <script src="../assets/site.js" data-variant="solid"></script>
@@ -562,6 +571,8 @@ function openSheet(k){
   const g = groups(poolOf(state.sys)).find(x=>x.key===k) || groups(items.filter(i=>!i.twin)).find(x=>x.key===k); if (!g) return;
   gcEvent("ver-par-"+(g.modelo+" "+g.color).toLowerCase().replace(/[^a-z0-9]+/g,"-"), modelName(g.modelo)+" "+g.color);
   current = g; pickSize = state.size && g.items.some(i=>i.talla===state.size) ? state.size : null;
+  if (!pickSize){ const only = uniqSizes(g.items); if (only.length === 1) pickSize = only[0]; }
+  try { window.metaTrack && metaTrack("ViewContent", {content_name: modelName(g.modelo)+" "+g.color, content_category: g.modelo}); } catch(e){}
   drawSheet();
   $("scrim").classList.add("on"); $("sheet").classList.add("on"); document.body.classList.add("sheet-open");
 }
@@ -576,7 +587,13 @@ function drawSheet(){
   const pr = priceFor(pickSize ? (sel.filter(ready).length ? sel.filter(ready) : sel) : g.items);
   const selReady = pickSize && sel.some(ready);
   const sizeTxt = pickSize ? ` en talla ${sizeShort(pickSize)}${sysOf(pickSize)==="W"?" (mujer)":sysOf(pickSize)==="M"?" (hombre)":""}` : "";
-  const msg = `¡Hola Bruna! Me interesan los ${modelName(g.modelo)} ${g.color}${sizeTxt}. ${pickSize ? (selReady?"¿Me ayudan con el pedido?":"¿Cómo hago para reservarlos?") : "¿Qué tallas tienen?"}`;
+  const parUrl = location.origin + location.pathname + "#par-" + slugOf(g);
+  const prTxt = pr ? pr.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim() : "";
+  const etaTxt = pickSize && !selReady && etaDate(sel) ? " (llega aprox. el " + fmtEta(etaDate(sel), 1) + ")" : "";
+  const msg = pickSize
+    ? `¡Hola Bruna! Quiero pedir estos:\n• ${modelName(g.modelo)} ${g.color}\n• Talla ${sizeLong(pickSize)}${cmOf(pickSize)?" ("+cmOf(pickSize)+")":""}\n• ${selReady ? "Entrega inmediata" : "Viene en camino"+etaTxt}${prTxt ? " · "+prTxt : ""}\n${parUrl}\n${selReady ? "¿Me ayudan con el pedido?" : "¿Cómo hago para reservarlos?"}`
+    : `¡Hola Bruna! Me interesan los ${modelName(g.modelo)} ${g.color}. ¿Qué tallas tienen?\n${parUrl}`;
+  const ctaTxt = !pickSize ? "Elegí tu talla para pedir" : selReady ? "Pedir por Instagram" : "Reservar por Instagram";
   $("sheet").innerHTML = `<div class="grab"></div><button class="x" id="close" aria-label="Cerrar">×</button>
     ${galleryHTML(g)}
     <div class="body">
@@ -586,11 +603,12 @@ function drawSheet(){
       ${pickSize && !selReady && etaDate(sel) ? `<div class="eta">Llega aprox. el ${fmtEta(etaDate(sel), 1)}</div>` : ""}
       ${rS.length?`<div class="grp"><div class="t"><i style="background:var(--ready)"></i>Listos para entregar <span>· 1 a 2 días hábiles</span></div><div class="tags">${tagRow(rS)}</div></div>`:""}
       ${wS.length?`<div class="grp"><div class="t"><i style="background:var(--way)"></i>Vienen en camino <span>· reservá o apartá</span></div><div class="tags">${tagRow(wS)}</div></div>`:""}
-      <div class="cta">
-        <a class="btn main" href="https://ig.me/m/${IG_USER}" target="_blank" rel="noopener" id="ig">Escribinos por Instagram</a>
-        <button class="btn ghost" id="copy">Copiar mensaje para enviar</button>
+      <div class="cta stick">
+        <a class="btn main${pickSize?"":" off"}" href="https://ig.me/m/${IG_USER}" target="_blank" rel="noopener" id="ig">${ctaTxt}</a>
+        <div class="paso">${pickSize ? "Al tocar, copiamos tu pedido y se abre nuestro chat: solo pegalo y envialo." : "Tocá tu talla arriba y te armamos el pedido."}</div>
       </div>
-      <div class="note">${pickSize?"":"Tocá una talla para incluirla en el mensaje. "}Te respondemos y te ayudamos con la talla y el pago.</div>
+      <div class="garant"><span>100% originales</span><span>Envío en 1 a 2 días</span><span>Pagá por SINPE o tarjeta</span></div>
+      <div class="note">¿Dudas con la talla? Escribinos igual y te ayudamos. <button class="linkbtn" id="copy">Solo copiar el mensaje</button></div>
       <div class="share"><button class="linkbtn" id="share">Compartir este par</button><a class="linkbtn" id="avisaPar" href="https://ig.me/m/${IG_USER}" target="_blank" rel="noopener">¿No está tu talla? Avisame</a></div>
     </div>`;
   $("close").onclick = closeSheet;
@@ -598,7 +616,12 @@ function drawSheet(){
   $("sheet").querySelectorAll(".tag").forEach(b => b.onclick = () => { pickSize = pickSize===b.dataset.t ? null : b.dataset.t; drawSheet(); });
   const copy = async () => { try { await navigator.clipboard.writeText(msg); toast("Mensaje copiado. Pegalo en nuestro chat."); return true; } catch(e){ return false; } };
   $("copy").onclick = async () => { if (!await copy()) toast(msg, 6000); };
-  $("ig").addEventListener("click", () => { copy(); });
+  $("ig").addEventListener("click", ev => {
+    if (!pickSize){ ev.preventDefault(); const t = $("sheet").querySelector(".tags"); if (t){ t.scrollIntoView({behavior:"smooth", block:"center"}); t.classList.remove("flash"); void t.offsetWidth; t.classList.add("flash"); } toast("Primero elegí tu talla"); return; }
+    copy();
+    gcEvent("pedir-"+slugOf(g), "Pedir "+modelName(g.modelo)+" "+g.color);
+    try { window.metaTrack && metaTrack("InitiateCheckout", {content_name: modelName(g.modelo)+" "+g.color, currency: "CRC", value: +(prTxt.replace(/[^0-9]/g,"").slice(-6)) || undefined}); } catch(e){}
+  });
   $("share").onclick = async () => {
     const url = location.origin + location.pathname + "#par-" + slugOf(g), title = `${modelName(g.modelo)} ${g.color} · Bruna.cr`;
     gcEvent("compartir-par-"+slugOf(g), title);
@@ -608,6 +631,7 @@ function drawSheet(){
   $("avisaPar").addEventListener("click", () => {
     const m = `¡Hola Bruna! Me interesan los ${modelName(g.modelo)} ${g.color}, pero no veo mi talla. ¿Me avisan cuando les llegue? Mi talla es: `;
     gcEvent("avisame-par-"+slugOf(g), "Avisame "+modelName(g.modelo)+" "+g.color);
+    try { window.metaTrack && metaTrack("Lead", {content_name: modelName(g.modelo)+" "+g.color}); } catch(e){}
     try { navigator.clipboard.writeText(m); toast("Mensaje copiado. Agregá tu talla y envialo."); } catch(e){}
   });
 }
@@ -662,7 +686,7 @@ function openFromHash(){
   state.sys = sysOf(g.items[0].talla); render(); openSheet(g.key);
 }
 let qt;
-$("q").addEventListener("input", e => { state.q = e.target.value; clearTimeout(qt); qt = setTimeout(() => { render(); if (state.q.trim().length > 2) gcEvent("buscar-"+fold(state.q).trim().replace(/[^a-z0-9]+/g,"-"), "Buscó: "+state.q.trim()); }, 250); });
+$("q").addEventListener("input", e => { state.q = e.target.value; clearTimeout(qt); qt = setTimeout(() => { render(); if (state.q.trim().length > 2) { try { window.metaTrack && metaTrack("Search", {search_string: state.q.trim()}); } catch(e){} } if (state.q.trim().length > 2) gcEvent("buscar-"+fold(state.q).trim().replace(/[^a-z0-9]+/g,"-"), "Buscó: "+state.q.trim()); }, 250); });
 $("fline").addEventListener("change", e => { state.line = e.target.value; render(); });
 $("fsort").addEventListener("change", e => { state.sort = e.target.value; render(); });
 const wantsGuide = () => /^#guia/i.test(location.hash);
