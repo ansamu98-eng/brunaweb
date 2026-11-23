@@ -6,6 +6,7 @@
     { t: "Muchas gracias por su paciencia, su atención y su excelente servicio. Ya me llegó mi pedido 🥳🙌 ¡Que tengan una linda tarde!", n: "Ana S.", f: "Noviembre 2026", img: "r1.jpg" },
     { t: "Ya recibí mis tenis y me quedaron perfectas 🥹❤️ ¡Muchísimas gracias Bruna por tan excelente servicio! De fijo las próximas las compro con ustedes!!!", n: "Alexandra", f: "", img: "r3.jpg" },
     { t: "Holaaa!! Ya me llegaron, estoy encantada, son preciosaaas 😍😍 todo fue súper rápidooo, muchísimas gracias 😊", n: "Clienta por Instagram", f: "", img: "r4.jpg" },
+    { t: "Excelente, me gustaría coordinar la compra! Sería las Black Coffee / Burro / Bitter Chocolate en talla 6.5 (23.5 JP)", n: "Lucy S.", f: "XT-6 Burro / Bitter Chocolate", img: "r6.jpg" },
     { t: "Llegaron súper bien!! Muchísimas gracias. De fijo nos estaremos hablando para próximas", n: "Cliente por Instagram", f: "", img: "r2.jpg" },
     { t: "Si me quedaron!!!!!!! 😍😍😍😍 están perfectos y me encantan!!! Muchísimas gracias", n: "Cliente por Instagram", f: "", img: "r5.jpg" }
   ];
