@@ -28,7 +28,7 @@
         '<li><a href="' + base + 'stock/"' + on("stock") + '><span>Qué hay en mi talla<small>Todo lo disponible hoy</small></span></a></li>' +
         '<li><a href="' + base + 'stock/#promos"><span>Descuentos especiales<small>Pares rebajados</small></span></a></li>' +
         '<li><a href="' + base + 'catalogo/"' + on("catalogo") + '><span>Catálogo completo<small>Todos los colores que trabajamos</small></span></a></li>' +
-        '<li><a href="' + base + 'stock/#guia"><span>Guía de tallas<small>UK, EU, US y cm</small></span></a></li>' +
+        '<li><a href="' + base + 'stock/#guia"><span>Guía de tallas<small>UK, EU, US y JP</small></span></a></li>' +
         '<li><a href="' + base + 'terminos/"' + on("terminos") + '><span>Términos de compra<small>Reclamos, cambios y devoluciones</small></span></a></li>' +
       '</ul>' +
       '<div class="ft"><a class="ig" href="https://ig.me/m/' + IG + '">Escribinos</a><a class="wa" href="https://instagram.com/' + IG + '">Ver Instagram</a></div>' +
