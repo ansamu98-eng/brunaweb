@@ -68,6 +68,13 @@
   /* Buscador y filtros */
   .tools{display:flex;gap:8px;flex-wrap:wrap;margin:30px auto 0;max-width:820px}
   .tools .q{flex:1 1 100%;position:relative}
+  .chips{display:flex;gap:8px;flex:1 1 100%;overflow-x:auto;scrollbar-width:none;padding:2px 0}
+  .chips::-webkit-scrollbar{display:none}
+  .chips:empty{display:none}
+  .chip{flex:none;font:inherit;font-size:13.5px;font-weight:400;color:var(--ink);border:1px solid var(--hair);background:var(--paper);border-radius:999px;padding:9px 15px;cursor:pointer;transition:background .15s,color .15s}
+  .chip small{font-size:11.5px;opacity:.55;margin-left:5px}
+  .chip.on{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+  .chip:focus-visible{outline:2px solid var(--coral);outline-offset:2px}
   .tools input{width:100%;font:inherit;font-size:14.5px;font-weight:300;color:var(--ink);border:1px solid var(--hair);background:var(--paper);border-radius:999px;padding:12px 18px 12px 44px;outline:none}
   .tools input:focus{border-color:#bdb5ab}
   .tools .q svg{position:absolute;left:17px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--mute)}
@@ -237,7 +244,7 @@
 
   <div class="tools" id="tools">
     <label class="q"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" type="search" placeholder="Buscar modelo o color, ej. Vainilla" autocomplete="off" aria-label="Buscar modelo o color"></label>
-    <select id="fline" aria-label="Línea"><option value="">Todas las líneas</option><option value="gtx">GORE-TEX</option><option value="lab">XT-6 LAB</option><option value="otro">Otras</option></select>
+    <div class="chips" id="fstyles" role="group" aria-label="Filtrar por estilo"></div>
     <select id="fsort" aria-label="Ordenar"><option value="">Recomendado</option><option value="asc">Precio: menor a mayor</option><option value="desc">Precio: mayor a menor</option></select>
   </div>
   <div id="out"><div class="msg">Cargando lo disponible…</div></div>
@@ -263,7 +270,7 @@
 
 <script>
 const IG_USER = "thebruna.cr";
-const state = { sys:"W", size:null, q:"", line:"", sort:"" };
+const state = { sys:"W", size:null, q:"", styles:[], sort:"" };
 let items = [], fotos = {}, catalogo = [], catById = {}, FA = {};
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -468,6 +475,7 @@ function render(){
   $("pinfo").style.display = isP ? "block" : "none";
   if (isP){
     $("uni").style.display = "none";
+    renderStyles(promoPool());
     const gs = groups(vis(promoPool())).sort((a,b)=> homeFirst(a,b) || (state.sort ? sortG(a,b) : (pctOff(b.items)-pctOff(a.items) || sortG(a,b))));
     $("out").innerHTML = (!gs.length && filtering()) ? noRes() : section("Descuentos especiales","Precio especial","promo","Precio rebajado mientras duren los pares.", gs, "promo");
     bindOut();
@@ -489,6 +497,7 @@ function render(){
 
   const out = $("out");
   if (!items.length){ return; }
+  renderStyles(state.size ? pool.filter(i=>i.talla===state.size) : pool);
   if (!state.size){
     // Vista general: todo lo listo en esta categoría
     const gs = groups(vis(pool));
@@ -516,7 +525,7 @@ let pickerVisible = true;
 function updSizebar(){
   const b = $("sizebar"); if (!b) return;
   const on = !!state.size && !pickerVisible;
-  if (state.size) $("sizebarT").textContent = "Talla " + sizeLong(state.size) + (cmOf(state.size) ? " · " + cmOf(state.size) : "");
+  if (state.size) $("sizebarT").textContent = "Talla " + sizeLong(state.size) + (cmOf(state.size) ? " · " + cmOf(state.size) : "") + (state.styles.length ? " · " + state.styles.join(", ") : "");
   b.classList.toggle("on", on);
   const nav = document.querySelector(".snav"); b.style.top = (nav ? Math.max(0, nav.getBoundingClientRect().bottom) : 0) + "px";
 }
@@ -524,7 +533,7 @@ function bindOut(){
   updSizebar();
   const out = $("out");
   out.querySelectorAll(".card").forEach(c => c.onclick = () => openSheet(c.dataset.k));
-  const cf = $("clearf"); if (cf) cf.onclick = () => { state.q = ""; state.line = ""; $("q").value = ""; $("fline").value = ""; render(); };
+  const cf = $("clearf"); if (cf) cf.onclick = () => { state.q = ""; state.styles = []; $("q").value = ""; render(); };
   const av = $("avisaTalla"); if (av) av.addEventListener("click", () => {
     const t = state.size, msg = `¡Hola Bruna! Busco talla ${sizeShort(t)}${sysOf(t)==="W"?" mujer":sysOf(t)==="M"?" hombre":""}${cmOf(t)?` (${cmOf(t)})`:""}. ¿Me avisan cuando les llegue algo en mi talla?`;
     gcEvent("avisame-talla-"+SYS[state.sys].h+"-"+sizeShort(t).replace(".","-"), "Avisame talla "+sizeLong(t));
@@ -540,9 +549,26 @@ const lineKey = m => { const l = lineOf(m); return l==="gtx" ? "gtx" : l==="xt-6
 const fold = s => String(s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/vanilla/g,"vainilla");
 function vis(list){
   const q = fold(state.q).trim().split(/\s+/).filter(Boolean);
-  return list.filter(i => (!state.line || lineKey(i.modelo)===state.line) && q.every(w => fold(modelName(i.modelo)+" "+i.modelo+" "+i.color).includes(w)));
+  return list.filter(i => (!state.styles.length || state.styles.includes(styleOf(i))) && q.every(w => fold(modelName(i.modelo)+" "+i.modelo+" "+i.color).includes(w)));
 }
-const filtering = () => !!(state.q.trim() || state.line);
+const filtering = () => !!(state.q.trim() || state.styles.length);
+// Estilos (XT-6, GORE-TEX, Expanse...) para filtrar y mandar recortes de un solo estilo
+const styleOf = i => modelName(i.modelo);
+function renderStyles(base){
+  const box = $("fstyles"); if (!box) return;
+  const cnt = {};
+  groups(base).forEach(g => { const k = styleOf(g.items[0]); cnt[k] = (cnt[k]||0) + 1; });
+  const keys = Object.keys(cnt).sort((a,b) => cnt[b]-cnt[a] || a.localeCompare(b));
+  state.styles = state.styles.filter(k => cnt[k]);
+  if (keys.length < 2){ box.innerHTML = ""; return; }
+  box.innerHTML = `<button type="button" class="chip${state.styles.length?"":" on"}" data-s="">Todos</button>` + keys.map(k => `<button type="button" class="chip${state.styles.includes(k)?" on":""}" data-s="${esc(k)}" aria-pressed="${state.styles.includes(k)}">${esc(k)}<small>${cnt[k]}</small></button>`).join("");
+  box.querySelectorAll(".chip").forEach(b => b.onclick = () => {
+    const k = b.dataset.s;
+    if (!k) state.styles = []; else state.styles = state.styles.includes(k) ? state.styles.filter(x=>x!==k) : [...state.styles, k];
+    if (k) gcEvent("estilo-"+fold(k).replace(/[^a-z0-9]+/g,"-"), "Filtro estilo "+k);
+    render();
+  });
+}
 const slugOf = g => fold(modelName(g.modelo)+" "+g.color).replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
 function noRes(){ return `<div class="empty nores"><b>No encontramos pares con ese filtro</b>Probá con otra palabra o <button class="linkbtn" id="clearf">quitá los filtros</button>. Si buscás un color que no ves, mirá el <a href="../catalogo/" style="color:var(--coral);font-weight:600">catálogo completo</a>.</div>`; }
 
@@ -687,7 +713,6 @@ function openFromHash(){
 }
 let qt;
 $("q").addEventListener("input", e => { state.q = e.target.value; clearTimeout(qt); qt = setTimeout(() => { render(); if (state.q.trim().length > 2) { try { window.metaTrack && metaTrack("Search", {search_string: state.q.trim()}); } catch(e){} } if (state.q.trim().length > 2) gcEvent("buscar-"+fold(state.q).trim().replace(/[^a-z0-9]+/g,"-"), "Buscó: "+state.q.trim()); }, 250); });
-$("fline").addEventListener("change", e => { state.line = e.target.value; render(); });
 $("fsort").addEventListener("change", e => { state.sort = e.target.value; render(); });
 const wantsGuide = () => /^#guia/i.test(location.hash);
 
