@@ -10,9 +10,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#FAF6F0; --paper:#FFFFFF; --ink:#4A3428; --mute:#8b7a6f; --hair:#ece4d9; --soft:#f3ece2;
-    --coral:#F8503B; --coral-d:#e2412d;
-    --ready:#2f7d55; --way:#b5651d; --sc:#E07B1F;
+    --bg:#FAF6F0; --paper:#FFFFFF; --ink:#4A3428; --mute:#75655B; --hair:#ece4d9; --soft:#f3ece2;
+    --coral:#D63A24; --coral-d:#D63A24; --coral-brand:#F8503B;
+    --ready:#2a7049; --way:#9a5414; --sc:#E07B1F;
     --choco:var(--ink); --muted:var(--mute); --card:var(--paper); --off:var(--bg); --line:var(--hair);
     --serif:Poppins,system-ui,sans-serif; --sans:Poppins,system-ui,sans-serif;
   }
@@ -24,7 +24,7 @@
   :focus-visible{outline:1.5px solid var(--ink);outline-offset:3px}
 
   /* Encabezado */
-  .hero{background:var(--coral);color:#fff;padding:44px 22px 50px;text-align:center;position:relative;overflow:hidden;border-radius:0 0 34px 34px}
+  .hero{background:var(--coral-brand);color:#fff;padding:44px 22px 50px;text-align:center;position:relative;overflow:hidden;border-radius:0 0 34px 34px}
   .hero .swan-bg{position:absolute;right:-34px;bottom:-30px;width:190px;opacity:.1;pointer-events:none}
   .hero .slogan{font-size:11px;letter-spacing:.34em;font-weight:400;opacity:.85}
   .hero h1{font-family:var(--serif);font-weight:400;font-size:clamp(36px,8vw,62px);line-height:1.04;letter-spacing:-.01em;margin:14px auto 0;max-width:12ch}
@@ -95,6 +95,8 @@
   .card .ph{aspect-ratio:1/1;background:var(--paper)!important;border-radius:18px}
   .ph{position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
   .ph img{width:100%;height:100%;object-fit:contain;display:block}
+  .ph.nofoto img{visibility:hidden}
+  .ph.nofoto::after{content:"";position:absolute;inset:0;margin:auto;width:56px;height:56px;background:url(../assets/cisne.png) center/contain no-repeat;opacity:.18}
   .ph svg{width:84%;height:auto}
   .card .ph img{transition:transform .5s ease}
   .card:hover .ph img{transform:scale(1.025)}
@@ -173,7 +175,7 @@
   .btn.ghost{background:transparent;color:var(--ink);border:1px solid #cfc8bf}
   .cta.stick{position:sticky;bottom:0;z-index:3;background:var(--bg,#FAF6F0);padding:12px 0 6px;margin-top:18px}
   .btn.off{opacity:.55}
-  .paso{font-size:12px;color:var(--mute,#8b7a6f);text-align:center;margin-top:7px}
+  .paso{font-size:12px;color:var(--mute,#75655B);text-align:center;margin-top:7px}
   .garant{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 14px;margin-top:10px;font-size:12px;color:var(--ink,#4A3428)}
   .garant span::before{content:"✓ ";color:var(--ready,#2f7d55);font-weight:600}
   .tags.flash{animation:flash 1s ease 2}
@@ -271,7 +273,7 @@
 <script>
 const IG_USER = "thebruna.cr";
 const state = { sys:"W", size:null, q:"", styles:[], sort:"" };
-let items = [], fotos = {}, catalogo = [], catById = {}, FA = {};
+let items = [], fotos = {}, catalogo = [], catById = {}, FA = {}, LOCAL = {};
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const crc = n => "₡" + Math.round(n).toLocaleString("es-CR").replace(/,/g,".").replace(/ /g,".");
@@ -372,6 +374,8 @@ function fotoOf(g){
     if (pre.length===1) c = pre[0];
   }
   const alta = FA[g.key]; if (alta) c = Object.assign({}, c || {}, {producto: alta});
+  // Fotos de otras tiendas ya copiadas a stock/fotos (scripts/fotos_externas.py)
+  if (c && (LOCAL[c.producto] || LOCAL[c.ambiente])) c = Object.assign({}, c, {producto: LOCAL[c.producto] || c.producto, ambiente: LOCAL[c.ambiente] || c.ambiente});
   return fotoCache[g.key] = c || null;
 }
 // Miniaturas livianas para la cuadrícula; el detalle usa la foto completa
@@ -383,7 +387,7 @@ function thumb(f){
 }
 function pictureHTML(g){
   const c = fotoOf(g), f = c && c.producto;
-  if (f) return `<img src="${esc(thumb(f))}" data-full="${esc(f)}" onerror="if(this.dataset.full&&this.src.indexOf(this.dataset.full)<0)this.src=this.dataset.full" alt="${esc(g.modelo+" "+g.color)}" loading="lazy" decoding="async">`;
+  if (f) return `<img src="${esc(thumb(f))}" data-full="${esc(f)}" onerror="if(this.dataset.full&&this.src.indexOf(this.dataset.full)<0){this.src=this.dataset.full}else{this.onerror=null;this.alt='';this.parentNode.classList.add('nofoto')}" alt="${esc(g.modelo+" "+g.color)}" loading="lazy" decoding="async">`;
   return sysOf(g.items[0].talla)==="R" ? teeSVG(g.color) : shoeSVG(g.color);
 }
 function phStyle(g){ return fotoOf(g) ? "background:#fff" : `background:${bgFor(palette(g.color).main)}`; }
@@ -726,8 +730,8 @@ function showUpdated(ts){
 
 (async () => {
   const getJ = u => fetch(u,{cache:"no-store"}).then(r => r.ok ? r.json() : null).catch(() => null);
-  const [al, fo, ca, fa] = await Promise.all([getJ("alias.json"), getJ("fotos.json"), getJ("catalogo.json"), getJ("fotos_alta.json")]);
-  if (al) ALIAS = al; if (fo) fotos = fo; if (fa) FA = fa;
+  const [al, fo, ca, fa, lo] = await Promise.all([getJ("alias.json"), getJ("fotos.json"), getJ("catalogo.json"), getJ("fotos_alta.json"), getJ("fotos_local.json")]);
+  if (al) ALIAS = al; if (fo) fotos = fo; if (fa) FA = fa; if (lo) LOCAL = lo;
   if (ca) { catalogo = ca; catalogo.forEach(c => catById[c.id] = c); }
   try {
     const r = await fetch("stock.json",{cache:"no-store"}); const d = await r.json();

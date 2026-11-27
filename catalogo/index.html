@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{--coral:#F8503B;--off:#FAF6F0;--choco:#4A3428;--muted:#8b7a6f;--line:#ece4d9;--ready:#2f7d55;--ready-bg:#e6f2ea;--way:#b5651d;--way-bg:#fbeedd;--shadow:0 1px 2px rgba(74,52,40,.05),0 8px 24px rgba(74,52,40,.07)}
+  :root{--coral:#D63A24;--coral-brand:#F8503B;--off:#FAF6F0;--choco:#4A3428;--muted:#75655B;--line:#ece4d9;--ready:#2a7049;--ready-bg:#e6f2ea;--way:#9a5414;--way-bg:#fbeedd;--shadow:0 1px 2px rgba(74,52,40,.05),0 8px 24px rgba(74,52,40,.07)}
   *{box-sizing:border-box}
   html,body{margin:0;background:var(--off);color:var(--choco);font-family:Poppins,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
   a{color:inherit;text-decoration:none}
@@ -110,7 +110,8 @@ const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt
 const norm = c => String(c).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/vanilla/g,"vainilla").replace(/grey/g,"gray").replace(/\s*\/\s*/g," / ").replace(/\s+/g," ").trim();
 const tok = c => norm(c).replace(/\bftw\b/g,"").split(" / ").map(s=>s.trim()).filter(Boolean);
 const lineOf = m => { m = m.toLowerCase(); return /gtx|gore/.test(m) ? "gtx" : /expanse/.test(m) ? "expanse" : /shadow|stormshade/.test(m) ? "stormshade" : /protective/.test(m) ? "protective" : /steel/.test(m) ? "steel" : /xt-6/.test(m) ? "xt-6" : "otro"; };
-const imgSrc = p => /^https?:\/\//.test(p) ? p : "../stock/" + p;
+let LOCAL = {};
+const imgSrc = p => { p = LOCAL[p] || p; return /^https?:\/\//.test(p) ? p : "../stock/" + p; };
 const pretty = c => String(c).replace(/\s*\/\s*/g," / ").replace(/^Vanilla/i,"Vainilla");
 const ORDER = ["XT-6","XT-6 GORE-TEX","XT-6 Expanse","XT-6 Protective","XT-6 Steel Streets","XT-6 Stormshade","XT-Whisper","Colaboración"];
 const ST = {l:["l","Entrega inmediata"], c:["c","En camino"], p:["p","Bajo preorden"]};
@@ -174,6 +175,7 @@ let tt; function toast(t){ const el=$("toast"); el.textContent=t; el.classList.a
 (async () => {
   try {
     const A = await fetch("../stock/alias.json",{cache:"no-store"}).then(r=>r.ok?r.json():{}).catch(()=>({}));
+    LOCAL = await fetch("../stock/fotos_local.json",{cache:"no-store"}).then(r=>r.ok?r.json():{}).catch(()=>({}));
     const al = c => A[String(c||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim()] || c;
     const [c, f, s] = await Promise.all([
       fetch("../stock/catalogo.json",{cache:"no-store"}).then(r=>r.json()),
